@@ -1,0 +1,107 @@
+#/bin/bash
+##raspi automagik digital signage script
+##version .01c, written by Joseph Keller, 2016.
+##run this app as root or with sudo privs!
+##requires omxplayer,pqiv and cifs-utils to work.
+
+##VARIABLES
+smbAddress={smb_address} //eg. 192.168.111.10
+smbFilepath={filepath} //eg. /signage
+smbUser={smb_user} 
+smbPass={smb_pass}
+smbMountPoint=/media/smb
+localFolder=/media/local
+signLogo={sign}.png
+signName=$HOSTNAME
+smbDisk="//${smbAddress}/${smbFilepath} $mountPoint cifs -o username=$smb_user,password=$smb_pass,user 0 0"
+ramDiskMountPoint='/media/ram0'
+ramDiskSize='128M'
+ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
+remoteFileTime=0
+localFileTime=0
+currentTime=0
+scriptPID="cat /tmp/signage_script.pid"
+
+##FUNCTIONS
+function remoteFileCopy {
+	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" & | log
+	localFileTime='stat -c %Y "${local_folder}/${sign_name}.mp4"'
+}
+
+function ramFileCopy {
+	cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" & | log
+}
+
+function videoPlayer {
+	killall omxplayer //just in case | log
+	killall pqiv //killing the fullscreen logo | log
+	omxplayer --loop "${ramDiskMountPoint}/${signName}.mp4" & | log
+}
+
+function log() {
+	//ONLY USE THIS FOR DEBUGGING
+	//WILL CAUSE WAY TOO MANY UNNECESSARY FLASH WRITES!
+	//(if it works)
+
+	currentTime=$(date '+%d/%m/%Y %H:%M:%S'); //gets current day, month, year, hour, minute and second
+	echo $currentTime >> ${local_folder}/${sign_name}_log.txt 
+	echo $1 &> ${local_folder}/${sign_name}_log.txt //pipes the redirected stdout/stderr to the log
+	//NOT SURE IF THIS IS GONNA WORK LOL
+	//abusing pipes and redirects like this is something I've never tried
+
+	sed -i -e '$a\' ${local_folder}/$sign_name}log.txt //adding a new line to the log
+	
+} 
+
+##MAIN PROGRAM
+if ps -p $scriptPID > /dev/null //check if script is already running
+	kill $scriptPID
+	if ps -p $scriptPID > /dev/null
+		echo "No previous script running!" | log
+	else
+		echo "Previous script killed." | log
+	fi
+fi
+
+if grep -q '$ramDisk' /etc/fstab; then //check
+	echo "fstab already updated with ramdisk" | log
+else
+	mkdir $ramDiskMountPoint
+	sed -i -e '$a\' /etc/fstab && sed -i -e '$ramDisk' /etc/fstab //copy new ramdisk mounting lines to fstab
+	mount -a
+	if [ "$(ls -A ${ramDiskMountPoint})" ]; then
+		echo "ramdisk failed to mount!" | log
+	else
+		echo "ramdisk mounted." | log
+	fi	
+fi
+
+if grep -q
+
+if [ "$(ls -A ${mount_point})" ]; then //check if mount point is empty
+	mkdir $smbMountPoint
+	sed -i -e '$a\' /etc/fstab && sed -i -e '$smbDisk' /etc/fstab //copy new smb mounting lines to fstab
+	if [ "$(ls -A ${smbMountPoint})" ]; then
+		echo "SMB failed to mount!" | log
+	else
+		echo "SMB mounted." | log
+	fi
+fi
+
+echo $BASHPID >> /tmp/signage_script.pid //write out this script instance's PID to a file
+
+while true
+	remoteFileTime='stat -c %Y "${smbMountPoint}/${sign_name}.mp4"'
+	ramFileCopy
+	wait ${!}
+	if remoteFileTime>=localFileTime
+		remoteFileCopy
+		wait ${!}
+		killall omxplayer
+		pqiv --fullscreen ${smbMountPoint}/${signLogo} & | log //display fullscreen image while the player refreshes
+		ramFileCopy
+		wait ${!}
+		videoPlayer
+	fi
+	sleep 1m //sleep the infinite loop for one minute
+done
