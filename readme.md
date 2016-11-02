@@ -15,10 +15,7 @@ Initial setup:
 sudo ufw allow ssh
 sudo ufw allow http
 sudo ufs allow https
-sudo ufw allow proto udp from 192.168.x.0/24 to any port 137
-sudo ufw allow proto udp from 192.168.x.0/24 to any port 138
-sudo ufw allow proto tcp from 192.168.x.0/24 to any port 139
-sudo ufw allow proto tcp from 192.168.x.0/24 to any port 445  
+sudo ufw allow samba
 sudo ufw enable
 -setup auto login to terminal prompt
 -add script to profile autorun
