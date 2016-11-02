@@ -9,21 +9,22 @@ Requires omxplayer, pqiv, and cifs-utils to work.
 If you copy this code, god help you.
 
 ##Initial setup
-change raspbian hostname
-passwd
-sudo apt-get install -y omxplayer pqiv cifs-utils 
-sudo ufw default deny
-sudo ufw allow ssh
-sudo ufw allow http
-sudo ufs allow https
-sudo ufw allow samba
-sudo ufw enable
-setup auto login to terminal prompt
-add script to profile autorun
-change script variables as needed
-reboot
+1. change raspbian hostname
+2. passwd
+3. setup wifi
+4. sudo apt-get install -y omxplayer pqiv cifs-utils 
+5. sudo ufw default deny
+6. sudo ufw allow ssh
+7. sudo ufw allow http
+8. sudo ufs allow https
+9. sudo ufw allow samba
+10. sudo ufw enable
+11. setup auto login to terminal prompt
+12. add script to profile autorun
+13. change script variables as needed
+14. reboot
 
 Subsequent setup:
-ctrl+c to break out of script
-change hostname
-reboot
+1. ctrl+c to break out of script
+2. change hostname
+3. reboot
