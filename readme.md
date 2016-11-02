@@ -24,7 +24,7 @@ If you copy this code, god help you.
 13. change script variables as needed
 14. reboot
 
-Subsequent setup:
+##Subsequent setup:
 1. ctrl+c to break out of script
 2. change hostname
 3. reboot
