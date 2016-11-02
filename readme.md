@@ -15,15 +15,16 @@ If you copy this code, god help you.
 4. disable USB auto mounting
 5. sudo apt-get install -y omxplayer pqiv cifs-utils 
 6. sudo ufw default deny
-7. sudo ufw allow ssh
-8. sudo ufw allow http
-9. sudo ufs allow https
-10. sudo ufw allow samba
-11. sudo ufw enable
-12. setup auto login to terminal prompt
-13. add script to profile autorun
-14. change script variables as needed
-15. reboot
+7. sudo ufw allow from 192.168.x.0/24
+8. sudo ufw allow ssh
+9. sudo ufw allow http
+10. sudo ufs allow https
+11. sudo ufw allow samba
+12. sudo ufw enable
+13. setup auto login to terminal prompt
+14. add script to profile autorun
+15. change script variables as needed
+16. reboot
 
 ##Subsequent setup:
 1. ctrl+c to break out of script

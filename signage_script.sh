@@ -77,9 +77,10 @@ else
 	fi
 fi
 
-if grep -q
+if grep -q '$smbDisk' /etc/fstab; then
+	echo "fstab already updated with smb" | log
 
-if [ "$(ls -A ${mount_point})" ]; then ##check if mount point is empty
+else
 	mkdir $smbMountPoint
 	sed -i -e '$a\' /etc/fstab && sed -i -e '$smbDisk' /etc/fstab ##copy new smb mounting lines to fstab
 	mount -a
