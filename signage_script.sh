@@ -33,28 +33,28 @@ function ramFileCopy {
 }
 
 function videoPlayer {
-	killall omxplayer //just in case | log
-	killall pqiv //killing the fullscreen logo | log
+	killall omxplayer | log
+	killall pqiv | log
 	omxplayer --loop "${ramDiskMountPoint}/${signName}.mp4" & | log
 }
 
 function log() {
-	//ONLY USE THIS FOR DEBUGGING
-	//WILL CAUSE WAY TOO MANY UNNECESSARY FLASH WRITES!
-	//(if it works)
+	#ONLY USE THIS FOR DEBUGGING
+	#WILL CAUSE WAY TOO MANY UNNECESSARY FLASH WRITES!
+	#(if it works)
 
-	currentTime=$(date '+%d/%m/%Y %H:%M:%S'); //gets current day, month, year, hour, minute and second
+	currentTime=$(date '+%d/%m/%Y %H:%M:%S'); ##gets current day, month, year, hour, minute and second
 	echo $currentTime >> ${local_folder}/${sign_name}_log.txt 
-	echo $1 &> ${local_folder}/${sign_name}_log.txt //pipes the redirected stdout/stderr to the log
-	//NOT SURE IF THIS IS GONNA WORK LOL
+	echo $1 &> ${local_folder}/${sign_name}_log.txt #pipes the redirected stdout/stderr to the log
+	#NOT SURE IF THIS IS GONNA WORK LOL
 	//abusing pipes and redirects like this is something I've never tried
 
-	sed -i -e '$a\' ${local_folder}/$sign_name}log.txt //adding a new line to the log
+	sed -i -e '$a\' ${local_folder}/$sign_name}log.txt ##adding a new line to the log
 	
 } 
 
 ##MAIN PROGRAM
-if ps -p $scriptPID > /dev/null //check if script is already running
+if ps -p $scriptPID > /dev/null ##check if script is already running
 	kill $scriptPID
 	if ps -p $scriptPID > /dev/null
 		echo "No previous script running!" | log
@@ -63,11 +63,11 @@ if ps -p $scriptPID > /dev/null //check if script is already running
 	fi
 fi
 
-if grep -q '$ramDisk' /etc/fstab; then //check
+if grep -q '$ramDisk' /etc/fstab; then 
 	echo "fstab already updated with ramdisk" | log
 else
 	mkdir $ramDiskMountPoint
-	sed -i -e '$a\' /etc/fstab && sed -i -e '$ramDisk' /etc/fstab //copy new ramdisk mounting lines to fstab
+	sed -i -e '$a\' /etc/fstab && sed -i -e '$ramDisk' /etc/fstab ##copy new ramdisk mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${ramDiskMountPoint})" ]; then
 		echo "ramdisk failed to mount!" | log
@@ -78,9 +78,9 @@ fi
 
 if grep -q
 
-if [ "$(ls -A ${mount_point})" ]; then //check if mount point is empty
+if [ "$(ls -A ${mount_point})" ]; then ##check if mount point is empty
 	mkdir $smbMountPoint
-	sed -i -e '$a\' /etc/fstab && sed -i -e '$smbDisk' /etc/fstab //copy new smb mounting lines to fstab
+	sed -i -e '$a\' /etc/fstab && sed -i -e '$smbDisk' /etc/fstab ##copy new smb mounting lines to fstab
 	if [ "$(ls -A ${smbMountPoint})" ]; then
 		echo "SMB failed to mount!" | log
 	else
@@ -88,7 +88,7 @@ if [ "$(ls -A ${mount_point})" ]; then //check if mount point is empty
 	fi
 fi
 
-echo $BASHPID >> /tmp/signage_script.pid //write out this script instance's PID to a file
+echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
 while true
 	remoteFileTime='stat -c %Y "${smbMountPoint}/${sign_name}.mp4"'
@@ -98,10 +98,10 @@ while true
 		remoteFileCopy
 		wait ${!}
 		killall omxplayer
-		pqiv --fullscreen ${smbMountPoint}/${signLogo} & | log //display fullscreen image while the player refreshes
+		pqiv --fullscreen ${smbMountPoint}/${signLogo} & | log ##display fullscreen image while the player refreshes
 		ramFileCopy
 		wait ${!}
 		videoPlayer
 	fi
-	sleep 1m //sleep the infinite loop for one minute
+	sleep 1m ##sleep the infinite loop for one minute
 done
