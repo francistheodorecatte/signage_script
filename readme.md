@@ -12,17 +12,18 @@ If you copy this code, god help you.
 1. change raspbian hostname
 2. passwd
 3. setup wifi
-4. sudo apt-get install -y omxplayer pqiv cifs-utils 
-5. sudo ufw default deny
-6. sudo ufw allow ssh
-7. sudo ufw allow http
-8. sudo ufs allow https
-9. sudo ufw allow samba
-10. sudo ufw enable
-11. setup auto login to terminal prompt
-12. add script to profile autorun
-13. change script variables as needed
-14. reboot
+4. disable USB auto mounting
+5. sudo apt-get install -y omxplayer pqiv cifs-utils 
+6. sudo ufw default deny
+7. sudo ufw allow ssh
+8. sudo ufw allow http
+9. sudo ufs allow https
+10. sudo ufw allow samba
+11. sudo ufw enable
+12. setup auto login to terminal prompt
+13. add script to profile autorun
+14. change script variables as needed
+15. reboot
 
 ##Subsequent setup:
 1. ctrl+c to break out of script
