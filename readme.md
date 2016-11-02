@@ -1,5 +1,5 @@
 <snippet>
-	<content><![CDATA[
+<content><![CDATA[
 # ${1:Project Name}
 
 Raspberry Pi Signage Script v0.1c
@@ -32,6 +32,7 @@ Subsequent setup:
 ctrl+c to break out of script
 change hostname
 reboot
-]]><content>
-	<tabTrigger>readme</tabTrigger>
+]]>
+<content>
+<tabTrigger>readme</tabTrigger>
 </snippet>
