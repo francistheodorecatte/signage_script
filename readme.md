@@ -1,10 +1,5 @@
-<snippet>
-<content><![CDATA[
-# ${1:Project Name}
+# Raspberry Pi Signage Script v0.1c
 
-Raspberry Pi Signage Script v0.1c
-
-## Description
 Yeah, there's a bunch more options out there for this exact problem I'm solving; they just don't solve our needs. Also yeah, I know this is absolute amateur hour.
 
 Right now you need to edit the variables in the script directly to change directories and such. I'll move this to a .config file eventually to make setup easier.
@@ -32,7 +27,3 @@ Subsequent setup:
 ctrl+c to break out of script
 change hostname
 reboot
-]]>
-<content>
-<tabTrigger>readme</tabTrigger>
-</snippet>
