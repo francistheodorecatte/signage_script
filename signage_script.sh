@@ -1,21 +1,24 @@
 #/bin/bash
 ##raspi automagik digital signage script
-##version .01c, written by Joseph Keller, 2016.
+##version .02, written by Joseph Keller, 2016.
 ##run this app as root or with sudo privs!
 ##requires omxplayer,pqiv and cifs-utils to work.
 
-##VARIABLES
-smbAddress='{smb_address}' ##update!
-smbFilepath='{filepath}' ##update!
-smbUser='{smb_user}' ##update!
-smbPass='{smb_pass}' ##update!
-smbMountPoint='/media/smb'
-localFolder='/media/local'
-signLogo='{sign}.png' ##update!
-signName=$HOSTNAME
+##USER CFG
+configfile="./signage_script.cfg"
+configfile_secure="/tmp/signage_script.cfg"
+
+if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"; then
+ 	echo "Config file is unclean; cleaning..." >&2
+	##clean config's contents and move to clean version
+ 	egrep '^#|^[^ ]*=[^;&]*'  "$configfile" > "$configfile_secured"
+ 	configfile="$configfile_secured"
+fi
+
+source $configfile
+
+##HARDCODED VARIABLES
 smbDisk="//${smbAddress}/${smbFilepath} $mountPoint cifs -o username=$smb_user,password=$smb_pass,user 0 0"
-ramDiskMountPoint='/media/ram0'
-ramDiskSize='128M'
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
 remoteFileTime=0
 localFileTime=0
