@@ -27,18 +27,18 @@ scriptPID="cat /tmp/signage_script.pid"
 
 ##FUNCTIONS
 function remoteFileCopy {
-	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" & | log
+	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" & 
 	localFileTime='stat -c %Y "${local_folder}/${sign_name}.mp4"'
 }
 
 function ramFileCopy {
-	cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" & | log
+	cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" & 
 }
 
 function videoPlayer {
-	killall omxplayer | log
-	killall pqiv | log
-	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" & | log
+	killall omxplayer 
+	killall pqiv 
+	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" & 
 }
 
 function log() {
@@ -60,38 +60,38 @@ function log() {
 if ps -p $scriptPID > /dev/null ##check if script is already running
 	kill $scriptPID
 	if ps -p $scriptPID > /dev/null
-		echo "No previous script running!" | log
+		echo "No previous script running!" 
 	else
-		echo "Previous script killed." | log
+		echo "Previous script killed." 
 	fi
 fi
 
 if grep -q '$ramDisk' /etc/fstab; then 
-	echo "fstab already updated with ramdisk" | log
+	echo "fstab already updated with ramdisk" 
 else
 	mkdir $ramDiskMountPoint
 	sed -i -e '$a\' /etc/fstab && sed -i -e '$ramDisk' /etc/fstab ##copy new ramdisk mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${ramDiskMountPoint})" ]; then ##check if the ram disk is mounted
-		echo "ramdisk failed to mount!" | log
+		echo "ramdisk failed to mount!" 
 		exit
 	else
-		echo "ramdisk mounted." | log
+		echo "ramdisk mounted." 
 	fi
 fi
 
 if grep -q '$smbDisk' /etc/fstab; then
-	echo "fstab already updated with smb" | log
+	echo "fstab already updated with smb" 
 
 else
 	mkdir $smbMountPoint
 	sed -i -e '$a\' /etc/fstab && sed -i -e '$smbDisk' /etc/fstab ##copy new smb mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${smbMountPoint})" ]; then
-		echo "SMB failed to mount!" | log
+		echo "SMB failed to mount!" 
 		exit
 	else
-		echo "SMB mounted." | log
+		echo "SMB mounted." 
 	fi
 fi
 
@@ -106,10 +106,10 @@ while true
 
 	if [ "$(ls -A  ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the video file is in RAM
 		if "$(ls -A ${smbMountPoint/${signLogo})" ] then
-			echo "No video or logo to display found!" | log ##complain that we have nothing to do
+			echo "No video or logo to display found!"  ##complain that we have nothing to do
 		else
-			echo "No video to display found!" | log
-			pqiv --fullscreen ${smbMountPoint}/${signLogo} | log ##display the logo while we wait for the video to appear
+			echo "No video to display found!" 
+			pqiv --fullscreen ${smbMountPoint}/${signLogo}  ##display the logo while we wait for the video to appear
 		fi
 	fi
 
@@ -118,7 +118,7 @@ while true
 		wait ${!}
 		killall omxplayer
 		killall pqiv
-		pqiv --fullscreen ${smbMountPoint}/${signLogo} & | log ##display fullscreen image while the player refreshes
+		pqiv --fullscreen ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
 		ramFileCopy
 		wait ${!}
 		videoPlayer
