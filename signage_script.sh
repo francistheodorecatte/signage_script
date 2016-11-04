@@ -18,7 +18,7 @@ fi
 source $configfile
 
 ##HARDCODED VARIABLES
-smbDisk="//${smbAddress}/${smbFilepath} $mountPoint cifs -o username=$smb_user,password=$smb_pass,user 0 0"
+smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs -o username=$smbUser,password=$smbPass,user 0 0"
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
 remoteFileTime=0
 localFileTime=0
