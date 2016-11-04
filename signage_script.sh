@@ -26,10 +26,9 @@ echo "password=$smbPass" >> $userHome/.smbcredentials
 ##HARDCODED VARIABLES
 smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$userHome/.smbcredentials,user 0 0"
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
-remoteFileTime=0
-localFileTime=0
-currentTime=0
 scriptPID="cat /tmp/signage_script.pid"
+remoteFileTime=0
+localfiletime=0
 
 ##FUNCTIONS
 function remoteFileCopy {
@@ -97,7 +96,10 @@ echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID 
 
 while true; do
 	remoteFileTime=$(stat --format=%Y "${smbMountPoint}/${signName}.mp4") ##update the remote file MTIME every time the loop restarts
-	echo $remoteFileTime
+	localfileTime=$(stat --format=%Y "${localFolder}/${signName}.mp4")
+	echo "${localFolder}/${signName}.mp4"
+	echo "Remote file time: " $remoteFileTime
+	echo "Local file time: " $localFileTime
 
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the local file has been copied to RAM
 		echo "Video file already in RAM!"
@@ -107,25 +109,26 @@ while true; do
 	fi
 
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
+		echo ""
+	else
 		if [ "$(ls -A ${smbMountPoint}/${signLogo})" ]; then
 			echo "No video to display found."
-			fbi -T 2 ${smbMountPoint/$signLogo}
+			fbi ${smbMountPoint/$signLogo}
 		else
 			echo "No video or logo to display found!"
 		fi
 	fi
 
-	if [ "$remoteFileTime" -ge "$localFileTime" ]; then
+	if [ "$remoteFileTime" -gt "$localFileTime" ]; then
+		echo "Copying newer remote file."
 		remoteFileCopy
 		wait $!
 		killall omxplayer
-		killall pqiv
-		fbi -T 2 ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
+		killall fbi
+		fbi -v ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
+		echo "Copying file into ram disk."
 		ramFileCopy
 		wait $!
-		videoPlayer
-	else
-		killall omxplayer
 		videoPlayer
 	fi
 
