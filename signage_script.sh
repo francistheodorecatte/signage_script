@@ -100,6 +100,10 @@ else
 	echo "fstab already updated with smb" 
 fi
 
+if [ "$(ls -A ${smbMountPoint})" ]; then
+	mkdir $localFolder
+fi
+
 rm /tmp/signage_script.pid
 echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
@@ -136,4 +140,3 @@ do
 
 	sleep 1m ##sleep the infinite loop for one minute
 done
-
