@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 ##raspi automagik digital signage script
 ##version .02, written by Joseph Keller, 2016.
 ##run this app as root or with sudo privs!
@@ -57,7 +57,7 @@ function videoPlayer {
 #}
 
 ##MAIN PROGRAM
-if ps -p $scriptPID > /dev/null; then ##check if script is already running
+if ps --pid $scriptPID > /dev/null; then ##check if script is already running
 	kill $scriptPID
 	if ps -p $scriptPID > /dev/null; then
 		echo "No previous script running!" 
