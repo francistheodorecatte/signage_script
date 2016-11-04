@@ -96,7 +96,7 @@ rm /tmp/signage_script.pid
 echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
 while true; do
-	remoteFileTime='stat -c %Y ${smbMountPoint}/${sign_name}.mp4' ##update the remote file MTIME every time the loop restarts
+	remoteFileTime=$(stat --format=%Y "${smbMountPoint}/${signName}.mp4") ##update the remote file MTIME every time the loop restarts
 	echo $remoteFileTime
 
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the local file has been copied to RAM
@@ -106,16 +106,16 @@ while true; do
 		wait $!
 	fi
 
-	if [ "$(ls -A  ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the video file is in RAM
-		if  [ "$(ls -A ${smbMountPoint/${signLogo})" ]; then
-			echo "No video or logo to display found."  ##complain that we have nothing to do
-		else
+	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
+		if [ "$(ls -A ${smbMountPoint}/${signLogo})" ]; then
 			echo "No video to display found."
-			pqiv --fullscreen ${smbMountPoint}/${signLogo}  ##display the logo while we wait for the video to appear
+			pqiv --fullscreen "${smbMountPoint/$signLogo}"
+		else
+			echo "No video or logo to display found!"
 		fi
 	fi
 
-	if $remoteFileTime>=$localFileTime; then
+	if [ "$remoteFileTime" -ge "$localFileTime" ]; then
 		remoteFileCopy
 		wait $!
 		killall omxplayer
