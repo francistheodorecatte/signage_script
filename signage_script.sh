@@ -41,20 +41,20 @@ function videoPlayer {
 	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" & 
 }
 
-function log() {
-	#ONLY USE THIS FOR DEBUGGING
-	#WILL CAUSE WAY TOO MANY UNNECESSARY FLASH WRITES!
-	#(if it works)
-
-	currentTime=$(date '+%d/%m/%Y %H:%M:%S'); ##gets current day, month, year, hour, minute and second
-	echo $currentTime >> ${local_folder}/${sign_name}_log.txt
-	echo $1 &> ${local_folder}/${sign_name}_log.txt #pipes the redirected stdout/stderr to the log
-	#NOT SURE IF THIS IS GONNA WORK LOL
-	//abusing pipes and redirects like this is something I've never tried
-
-	sed -i -e '$a\' ${local_folder}/$sign_name}log.txt ##adding a new line to the log
-
-}
+#function log() {
+#	#ONLY USE THIS FOR DEBUGGING
+#	#WILL CAUSE WAY TOO MANY UNNECESSARY FLASH WRITES!
+#	#(if it works)
+#
+#	currentTime=$(date '+%d/%m/%Y %H:%M:%S'); ##gets current day, month, year, hour, minute and second
+#	echo $currentTime >> ${local_folder}/${sign_name}_log.txt
+#	echo $1 &> ${local_folder}/${sign_name}_log.txt #pipes the redirected stdout/stderr to the log
+#	#NOT SURE IF THIS IS GONNA WORK LOL
+#	#abusing pipes and redirects like this is something I've never tried
+#
+#	sed -i -e '$a\' ${local_folder}/$sign_name}log.txt ##adding a new line to the log
+#
+#}
 
 ##MAIN PROGRAM
 if ps -p $scriptPID > /dev/null; then ##check if script is already running
@@ -106,9 +106,9 @@ while true
 
 	if [ "$(ls -A  ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the video file is in RAM
 		if "$(ls -A ${smbMountPoint/${signLogo})" ]; then
-			echo "No video or logo to display found!"  ##complain that we have nothing to do
+			echo "No video or logo to display found."  ##complain that we have nothing to do
 		else
-			echo "No video to display found!" 
+			echo "No video to display found."
 			pqiv --fullscreen ${smbMountPoint}/${signLogo}  ##display the logo while we wait for the video to appear
 		fi
 	fi
@@ -129,3 +129,4 @@ while true
 
 	sleep 1m ##sleep the infinite loop for one minute
 done
+
