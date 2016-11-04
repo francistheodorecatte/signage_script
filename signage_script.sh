@@ -106,7 +106,7 @@ echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID 
 
 while :
 do
-	remoteFileTime='stat -c %Y "${smbMountPoint}/${sign_name}.mp4"' ##update the remote file MTIME every time the loop restarts
+	remoteFileTime='stat -c %Y ${smbMountPoint}/${sign_name}.mp4' ##update the remote file MTIME every time the loop restarts
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the local file has been copied to RAM
 		ramFileCopy
 		wait ${!}
