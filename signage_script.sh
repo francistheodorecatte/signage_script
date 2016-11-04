@@ -42,6 +42,7 @@ function ramFileCopy {
 
 function videoPlayer {
 	killall omxplayer
+	killall omxplayer.bin
 	killall fbi
 	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" &
 }
@@ -125,6 +126,7 @@ while true; do
 		remoteFileCopy
 		wait $!
 		killall omxplayer
+		killall omxplayer.bin
 		killall fbi
 		fbi -v ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
 		echo "Copying file into ram disk."
