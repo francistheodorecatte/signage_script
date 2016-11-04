@@ -18,9 +18,9 @@ fi
 source $configfile
 
 rm $userHome/.smbcredentials
-echo "username=\"$smbUser\"" >> $userHome/.smbcredentials
+echo "username=$smbUser" >> $userHome/.smbcredentials
 sed -i -e '$a\' $HOME/.smbcredentials
-echo "password=\"$smbPass\"" >> $userHome/.smbcredentials
+echo "password=$smbPass" >> $userHome/.smbcredentials
 
 ##HARDCODED VARIABLES
 smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$userHome/.smbcredentials,user 0 0"
