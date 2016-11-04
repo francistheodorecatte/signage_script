@@ -8,6 +8,7 @@
 configfile="./signage_script.cfg"
 configfile_secure="/tmp/signage_script.cfg"
 
+##checking that nobody has done anything funny to the config file
 if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"; then
  	echo "Config file is unclean; cleaning..." >&2
 	##clean config's contents and move to clean version
@@ -45,21 +46,6 @@ function videoPlayer {
 	killall pqiv 
 	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" & 
 }
-
-#function log() {
-#	#ONLY USE THIS FOR DEBUGGING
-#	#WILL CAUSE WAY TOO MANY UNNECESSARY FLASH WRITES!
-#	#(if it works)
-#
-#	currentTime=$(date '+%d/%m/%Y %H:%M:%S'); ##gets current day, month, year, hour, minute and second
-#	echo $currentTime >> ${local_folder}/${sign_name}_log.txt
-#	echo $1 &> ${local_folder}/${sign_name}_log.txt #pipes the redirected stdout/stderr to the log
-#	#NOT SURE IF THIS IS GONNA WORK LOL
-#	#abusing pipes and redirects like this is something I've never tried
-#
-#	sed -i -e '$a\' ${local_folder}/$sign_name}log.txt ##adding a new line to the log
-#
-#}
 
 ##MAIN PROGRAM
 if ps --pid $scriptPID > /dev/null; then ##check if script is already running
@@ -109,7 +95,7 @@ fi
 rm /tmp/signage_script.pid
 echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
-while :
+while true
 do
 	remoteFileTime='stat -c %Y ${smbMountPoint}/${sign_name}.mp4' ##update the remote file MTIME every time the loop restarts
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the local file has been copied to RAM
@@ -140,5 +126,5 @@ do
 		videoPlayer
 	fi
 
-	sleep 1m ##sleep the infinite loop for one minute
+	sleep 60 ##sleep the infinite loop for one minute
 done
