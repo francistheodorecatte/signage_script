@@ -61,21 +61,21 @@ if ps -p $scriptPID > /dev/null ##check if script is already running
 	kill $scriptPID
 	if ps -p $scriptPID > /dev/null; then
 		echo "No previous script running!" 
-	elif; then
+	else
 		echo "Previous script killed." 
 	fi
 fi
 
 if grep -q '$ramDisk' /etc/fstab; then 
 	echo "fstab already updated with ramdisk" 
-elif; then
+else
 	mkdir $ramDiskMountPoint
 	sed -i -e '$a\' /etc/fstab && sed -i -e '$ramDisk' /etc/fstab ##copy new ramdisk mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${ramDiskMountPoint})" ]; then ##check if the ram disk is mounted
 		echo "ramdisk failed to mount!" 
 		exit
-	elif; then
+	else
 		echo "ramdisk mounted." 
 	fi
 fi
@@ -83,14 +83,14 @@ fi
 if grep -q '$smbDisk' /etc/fstab; then
 	echo "fstab already updated with smb" 
 
-elif; then
+else
 	mkdir $smbMountPoint
 	sed -i -e '$a\' /etc/fstab && sed -i -e '$smbDisk' /etc/fstab ##copy new smb mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${smbMountPoint})" ]; then
 		echo "SMB failed to mount!" 
 		exit
-	elif; then
+	else
 		echo "SMB mounted." 
 	fi
 fi
@@ -107,7 +107,7 @@ while true
 	if [ "$(ls -A  ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the video file is in RAM
 		if "$(ls -A ${smbMountPoint/${signLogo})" ]; then
 			echo "No video or logo to display found!"  ##complain that we have nothing to do
-		elif; then
+		else
 			echo "No video to display found!" 
 			pqiv --fullscreen ${smbMountPoint}/${signLogo}  ##display the logo while we wait for the video to appear
 		fi
@@ -122,7 +122,7 @@ while true
 		ramFileCopy
 		wait ${!}
 		videoPlayer
-	elif; then
+	else
 		killall omxplayer
 		videoPlayer
 	fi
