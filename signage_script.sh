@@ -1,8 +1,8 @@
 #!/bin/bash
 ##raspi automagik digital signage script
-##version .02, written by Joseph Keller, 2016.
+##version .02c, written by Joseph Keller, 2016.
 ##run this app as root or with sudo privs!
-##requires omxplayer,pqiv and cifs-utils to work.
+##requires omxplayer, fbi and cifs-utils to work.
 
 ##USER CFG
 configfile="./signage_script.cfg"
@@ -43,7 +43,7 @@ function ramFileCopy {
 
 function videoPlayer {
 	killall omxplayer
-	killall pqiv
+	killall fbi
 	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" &
 }
 
@@ -109,7 +109,7 @@ while true; do
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
 		if [ "$(ls -A ${smbMountPoint}/${signLogo})" ]; then
 			echo "No video to display found."
-			pqiv --fullscreen "${smbMountPoint/$signLogo}"
+			fbi ${smbMountPoint/$signLogo}
 		else
 			echo "No video or logo to display found!"
 		fi
@@ -120,7 +120,7 @@ while true; do
 		wait $!
 		killall omxplayer
 		killall pqiv
-		pqiv --fullscreen ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
+		fbi  ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
 		ramFileCopy
 		wait $!
 		videoPlayer
