@@ -95,8 +95,7 @@ fi
 rm /tmp/signage_script.pid
 echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
-while true
-do
+while true; do
 	remoteFileTime='stat -c %Y ${smbMountPoint}/${sign_name}.mp4' ##update the remote file MTIME every time the loop restarts
 	echo $remoteFileTime
 
