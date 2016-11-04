@@ -93,13 +93,15 @@ else
 	sed -i -e '$a\' /etc/fstab && echo "$smbDisk" >> /etc/fstab ##copy new smb mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${smbMountPoint})" ]; then
-		echo "SMB failed to mount!" 
+		echo "SMB mounted!" 
 		exit
 	else
-		echo "SMB mounted." 
+		echo "SMB failed to mount!"
+		exit
 	fi
 fi
 
+rm /tmp/signage_script.pid
 echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
 while true
