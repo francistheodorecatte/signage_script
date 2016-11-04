@@ -33,42 +33,42 @@ scriptPID="cat /tmp/signage_script.pid"
 
 ##FUNCTIONS
 function remoteFileCopy {
-	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" & 
+	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" &
 	localFileTime='stat -c %Y "${local_folder}/${sign_name}.mp4"'
 }
 
 function ramFileCopy {
-	cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" & 
+	cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" &
 }
 
 function videoPlayer {
-	killall omxplayer 
-	killall pqiv 
-	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" & 
+	killall omxplayer
+	killall pqiv
+	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" &
 }
 
 ##MAIN PROGRAM
 if ps --pid $scriptPID > /dev/null; then ##check if script is already running
 	kill $scriptPID
 	if ps -p $scriptPID > /dev/null; then
-		echo "No previous script running!" 
+		echo "No previous script running!"
 	else
-		echo "Previous script killed." 
+		echo "Previous script killed."
 	fi
 fi
 
-if grep -q '$ramDisk' /etc/fstab; then 
+if grep -q '$ramDisk' /etc/fstab; then
 	mkdir $ramDiskMountPoint
 	sed -i -e '$a\' /etc/fstab  && echo "$ramDisk" >> /etc/fstab ##copy new ramdisk mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${ramDiskMountPoint})" ]; then ##check if the ram disk is mounted
-		echo "ramdisk failed to mount!" 
+		echo "ramdisk failed to mount!"
 		exit
 	else
-		echo "ramdisk mounted." 
+		echo "ramdisk mounted."
 	fi
 else
-	echo "fstab already updated with ramdisk" 	
+	echo "fstab already updated with ramdisk"
 fi
 
 if grep -q '$smbDisk' /etc/fstab; then
@@ -76,14 +76,14 @@ if grep -q '$smbDisk' /etc/fstab; then
 	sed -i -e '$a\' /etc/fstab && echo "$smbDisk" >> /etc/fstab ##copy new smb mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${smbMountPoint})" ]; then
-		echo "SMB mounted!" 
+		echo "SMB mounted!"
 		exit
 	else
 		echo "SMB failed to mount!"
 		exit
 	fi
 else
-	echo "fstab already updated with smb" 
+	echo "fstab already updated with smb"
 fi
 
 if [ "$(ls -A ${smbMountPoint})" ]; then
@@ -98,7 +98,11 @@ echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID 
 while true
 do
 	remoteFileTime='stat -c %Y ${smbMountPoint}/${sign_name}.mp4' ##update the remote file MTIME every time the loop restarts
+	echo $remoteFileTime
+
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the local file has been copied to RAM
+		echo "Video file already in RAM!"
+	else
 		ramFileCopy
 		wait $!
 	fi
@@ -111,7 +115,7 @@ do
 			pqiv --fullscreen ${smbMountPoint}/${signLogo}  ##display the logo while we wait for the video to appear
 		fi
 	fi
-	
+
 	if $remoteFileTime>=$localFileTime; then
 		remoteFileCopy
 		wait $!
