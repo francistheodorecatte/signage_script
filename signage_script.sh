@@ -57,7 +57,7 @@ function log() {
 }
 
 ##MAIN PROGRAM
-if ps -p $scriptPID > /dev/null ##check if script is already running
+if ps -p $scriptPID > /dev/null; then ##check if script is already running
 	kill $scriptPID
 	if ps -p $scriptPID > /dev/null; then
 		echo "No previous script running!" 
