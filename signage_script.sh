@@ -96,12 +96,11 @@ echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID 
 
 while true; do
 	remoteFileTime=$(stat --format=%Y "${smbMountPoint}/${signName}.mp4") ##update the remote file MTIME every time the loop restarts
-	localFileTime=$(stat --format=%Y "${localFolder}/${signName}.mp4") ##same with the local file
-	if [ "$localFileTime" = "/dev/null" ]; then ##but do some sanity checking for the case where there is no local file yet
-		echo "There's no local file to stat!"
+	if [ "$(ls -A ${localFolder}/${signName}.mp4") ]; then
+		localFileTime=$(stat --format=%Y "${localFolder}/${signName}.mp4")
+	else
 		localFileTime=0
 	fi
-	
 
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the local file has been copied to RAM
 		echo "Video file already in RAM!"
