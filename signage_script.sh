@@ -38,7 +38,7 @@ function ramFileCopy {
 function videoPlayer {
 	killall omxplayer | log
 	killall pqiv | log
-	omxplayer --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" & | log
+	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" & | log
 }
 
 function log() {
