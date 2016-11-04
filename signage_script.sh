@@ -59,7 +59,7 @@ function log() {
 ##MAIN PROGRAM
 if ps -p $scriptPID > /dev/null ##check if script is already running
 	kill $scriptPID
-	if ps -p $scriptPID > /dev/null
+	if ps -p $scriptPID > /dev/null; then
 		echo "No previous script running!" 
 	else
 		echo "Previous script killed." 
@@ -105,7 +105,7 @@ while true
 	fi
 
 	if [ "$(ls -A  ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the video file is in RAM
-		if "$(ls -A ${smbMountPoint/${signLogo})" ] then
+		if "$(ls -A ${smbMountPoint/${signLogo})" ]; then
 			echo "No video or logo to display found!"  ##complain that we have nothing to do
 		else
 			echo "No video to display found!" 
@@ -113,7 +113,7 @@ while true
 		fi
 	fi
 
-	if remoteFileTime>=localFileTime
+	if remoteFileTime>=localFileTime; then
 		remoteFileCopy
 		wait ${!}
 		killall omxplayer
