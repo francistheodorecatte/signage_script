@@ -17,8 +17,13 @@ fi
 
 source $configfile
 
+rm $HOME/.smbcredentials
+echo "username=" && echo $smbUser >> $HOME/.smbcredentials
+sed -i -e '$a\' $HOME/.smbcredentials
+echo "password=" && echo $smbPassword >> $HOME/.smbcredentials
+
 ##HARDCODED VARIABLES
-smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs -o username=$smbUser,password=$smbPass,user 0 0"
+smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$HOME,user 0 0"
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
 remoteFileTime=0
 localFileTime=0
@@ -67,8 +72,6 @@ if ps --pid $scriptPID > /dev/null; then ##check if script is already running
 fi
 
 if grep -q '$ramDisk' /etc/fstab; then 
-	echo "fstab already updated with ramdisk" 
-else
 	mkdir $ramDiskMountPoint
 	sed -i -e '$a\' /etc/fstab  && echo "$ramDisk" >> /etc/fstab ##copy new ramdisk mounting lines to fstab
 	mount -a
@@ -78,6 +81,8 @@ else
 	else
 		echo "ramdisk mounted." 
 	fi
+else
+	echo "fstab already updated with ramdisk" 	
 fi
 
 if grep -q '$smbDisk' /etc/fstab; then
