@@ -13,7 +13,7 @@ If you copy this code, god help you.
 2. passwd
 3. setup wifi
 4. disable USB auto mounting
-5. sudo apt-get install -y omxplayer pqiv cifs-utils 
+5. sudo apt-get install -y omxplayer pqiv cifs-utils git 
 6. sudo ufw default deny
 7. sudo ufw allow from 192.168.x.0/24
 8. sudo ufw allow ssh
