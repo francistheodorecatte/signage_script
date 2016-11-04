@@ -43,11 +43,13 @@ function ramFileCopy {
 function videoPlayer {
 	killall omxplayer
 	killall omxplayer.bin
-	killall fbi
 	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" &
 }
 
 ##MAIN PROGRAM
+rm $localFolder/$signName}.mp4 ##removing local videos if script has been re-run multiple times
+rm $localFolder/$signName}.mp4
+
 if ps --pid $scriptPID > /dev/null; then ##check if script is already running
 	kill $scriptPID
 	if ps -p $scriptPID > /dev/null; then
@@ -97,7 +99,7 @@ echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID 
 
 while true; do
 	remoteFileTime=$(stat --format=%Y "${smbMountPoint}/${signName}.mp4") ##update the remote file MTIME every time the loop restarts
-	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then
+	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file time
 		localFileTime=$(stat --format=%Y "${localFolder}/${signName}.mp4")
 	else
 		localFileTime=0
@@ -110,25 +112,12 @@ while true; do
 		wait $!
 	fi
 
-	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
-		echo ""
-	else
-		if [ "$(ls -A ${smbMountPoint}/${signLogo})" ]; then
-			echo "No video to display found."
-			fbi ${smbMountPoint/$signLogo}
-		else
-			echo "No video or logo to display found!"
-		fi
-	fi
-
 	if [ "$remoteFileTime" -gt "$localFileTime" ]; then
 		echo "Copying newer remote file."
 		remoteFileCopy
 		wait $!
 		killall omxplayer
 		killall omxplayer.bin
-		killall fbi
-		fbi -v ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
 		echo "Copying file into ram disk."
 		ramFileCopy
 		wait $!

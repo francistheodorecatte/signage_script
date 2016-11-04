@@ -4,6 +4,6 @@ Yeah, there's a bunch more options out there for this exact problem I'm solving;
 
 Now including a user config file with some simple input sanitization! Fancy.
 
-Requires omxplayer, fbi, and cifs-utils to work. If you want to keep your Pi from becoming part of a botnet, I suggest using ufw.
+Requires omxplayer and cifs-utils to work. If you want to keep your Pi from becoming part of a botnet, I suggest using ufw.
 
 If you copy this code, god help you
