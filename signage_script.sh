@@ -112,7 +112,7 @@ do
 	remoteFileTime='stat -c %Y ${smbMountPoint}/${sign_name}.mp4' ##update the remote file MTIME every time the loop restarts
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the local file has been copied to RAM
 		ramFileCopy
-		wait ${!}
+		wait $!
 	fi
 
 	if [ "$(ls -A  ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the video file is in RAM
@@ -123,15 +123,15 @@ do
 			pqiv --fullscreen ${smbMountPoint}/${signLogo}  ##display the logo while we wait for the video to appear
 		fi
 	fi
-
+ls 
 	if remoteFileTime>=localFileTime; then
 		remoteFileCopy
-		wait ${!}
+		wait $!
 		killall omxplayer
 		killall pqiv
 		pqiv --fullscreen ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
 		ramFileCopy
-		wait ${!}
+		wait $!
 		videoPlayer
 	else
 		killall omxplayer
