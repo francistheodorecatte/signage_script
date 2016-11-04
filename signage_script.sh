@@ -109,7 +109,7 @@ while true; do
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
 		if [ "$(ls -A ${smbMountPoint}/${signLogo})" ]; then
 			echo "No video to display found."
-			fbi ${smbMountPoint/$signLogo}
+			fbi -T 2 ${smbMountPoint/$signLogo}
 		else
 			echo "No video or logo to display found!"
 		fi
@@ -120,7 +120,7 @@ while true; do
 		wait $!
 		killall omxplayer
 		killall pqiv
-		fbi  ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
+		fbi -T 2 ${smbMountPoint}/${signLogo} &  ##display fullscreen image while the player refreshes
 		ramFileCopy
 		wait $!
 		videoPlayer
