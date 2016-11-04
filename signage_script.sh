@@ -96,7 +96,7 @@ echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID 
 
 while true; do
 	remoteFileTime=$(stat --format=%Y "${smbMountPoint}/${signName}.mp4") ##update the remote file MTIME every time the loop restarts
-	if [ "$(ls -A ${localFolder}/${signName}.mp4") ]; then
+	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then
 		localFileTime=$(stat --format=%Y "${localFolder}/${signName}.mp4")
 	else
 		localFileTime=0
