@@ -125,8 +125,8 @@ do
 			pqiv --fullscreen ${smbMountPoint}/${signLogo}  ##display the logo while we wait for the video to appear
 		fi
 	fi
-ls 
-	if remoteFileTime>=localFileTime; then
+	
+	if $remoteFileTime>=$localFileTime; then
 		remoteFileCopy
 		wait $!
 		killall omxplayer
