@@ -86,9 +86,6 @@ else
 fi
 
 if grep -q '$smbDisk' /etc/fstab; then
-	echo "fstab already updated with smb" 
-
-else
 	mkdir $smbMountPoint
 	sed -i -e '$a\' /etc/fstab && echo "$smbDisk" >> /etc/fstab ##copy new smb mounting lines to fstab
 	mount -a
@@ -99,6 +96,8 @@ else
 		echo "SMB failed to mount!"
 		exit
 	fi
+else
+	echo "fstab already updated with smb" 
 fi
 
 rm /tmp/signage_script.pid
