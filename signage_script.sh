@@ -48,7 +48,7 @@ function videoPlayer {
 
 ##MAIN PROGRAM
 rm $localFolder/$signName}.mp4 ##removing local videos if script has been re-run multiple times
-rm $localFolder/$signName}.mp4
+rm $ramDiskMountPoint/$signName}.mp4
 
 if ps --pid $scriptPID > /dev/null; then ##check if script is already running
 	kill $scriptPID
