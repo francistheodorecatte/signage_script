@@ -70,7 +70,7 @@ if grep -q '$ramDisk' /etc/fstab; then
 	echo "fstab already updated with ramdisk" 
 else
 	mkdir $ramDiskMountPoint
-	sed -i -e '$a\' /etc/fstab && sed -i -e '$ramDisk' /etc/fstab ##copy new ramdisk mounting lines to fstab
+	sed -i -e '$a\' "$ramDisk" /etc/fstab ##copy new ramdisk mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${ramDiskMountPoint})" ]; then ##check if the ram disk is mounted
 		echo "ramdisk failed to mount!" 
@@ -85,7 +85,7 @@ if grep -q '$smbDisk' /etc/fstab; then
 
 else
 	mkdir $smbMountPoint
-	sed -i -e '$a\' /etc/fstab && sed -i -e '$smbDisk' /etc/fstab ##copy new smb mounting lines to fstab
+	sed -i -e '$a\' "$smbDisk" /etc/fstab ##copy new smb mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${smbMountPoint})" ]; then
 		echo "SMB failed to mount!" 
