@@ -47,8 +47,6 @@ function videoPlayer {
 }
 
 ##MAIN PROGRAM
-rm $localFolder/$signName.mp4 ##removing local videos if script has been re-run multiple times
-rm $ramDiskMountPoint/$signName.mp4
 
 if ps --pid $scriptPID > /dev/null; then ##check if script is already running
 	kill $scriptPID
@@ -97,6 +95,12 @@ fi
 rm /tmp/signage_script.pid
 echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
+killall omxplayer
+killall omxplayer.bin
+ramFileCopy
+wait $!
+videoPlayer
+
 while true; do
 	remoteFileTime=$(stat --format=%Y "${smbMountPoint}/${signName}.mp4") ##update the remote file MTIME every time the loop restarts
 	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file time
@@ -116,8 +120,6 @@ while true; do
 		echo "Copying newer remote file."
 		remoteFileCopy
 		wait $!
-		killall omxplayer
-		killall omxplayer.bin
 		echo "Copying file into ram disk."
 		ramFileCopy
 		wait $!
