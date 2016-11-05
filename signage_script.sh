@@ -42,7 +42,8 @@ function ramFileCopy {
 
 function videoPlayer {
 	killall omxplayer
-	omxplayer -b -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" & ##start omxplayer with a blanked background, output to hdmi, loop, turn off the on-screen display, and disable key controls
+	omxplayer -b -o hdmi --loop --no-osd --no-keys --orientation $screenOrientation --aspect-mode $aspectMode "${ramDiskMountPoint}/${signName}.mp4" & 
+	##start omxplayer with a blanked background, output to hdmi, loop, turn off the on-screen display, and disable key controls
 	killall omxplayer.bin 
 }
 
