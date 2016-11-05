@@ -36,6 +36,7 @@ function remoteFileCopy {
 	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" &
 	wait $!
 	localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
+	echo "local MD5 hash is: " $localMD5Hash
 }
 
 function ramFileCopy {
@@ -107,11 +108,13 @@ fi
 
 while true; do
 	remoteMD5Hash=`md5sum -b "${smbMountPoint}/${signName}.mp4" | awk '{print $1}'` ##update the remote file's MD5 hash every time the loop restarts
+	echo "remote MD5 hash is: " $remoteMD5Hash
 	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file time
 		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
 	else
 		localMD5Hash=0
 	fi
+	echo "local MD5 hash is: " $localMD5Hash
 
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the local file has been copied to RAM
 		echo "Video file already in RAM!"
