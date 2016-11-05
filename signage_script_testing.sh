@@ -123,7 +123,7 @@ while true; do
 		wait $!
 	fi
 
-	if [ "$remoteMD5Hash" -ne "$localMD5Hash" ]; then
+	if [ "$remoteMD5Hash" != "$localMD5Hash" ]; then
 		echo "Copying newer remote file."
 		remoteFileCopy
 		wait $!
