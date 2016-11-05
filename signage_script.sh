@@ -42,8 +42,8 @@ function ramFileCopy {
 
 function videoPlayer {
 	killall omxplayer
-	killall omxplayer.bin
-	omxplayer -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" &
+	omxplayer -b -o hdmi --loop --no-osd --no-keys "${ramDiskMountPoint}/${signName}.mp4" & ##start omxplayer with a blanked background, output to hdmi, loop, turn off the on-screen display, and disable key controls
+	killall omxplayer.bin 
 }
 
 ##MAIN PROGRAM
@@ -95,11 +95,12 @@ fi
 rm /tmp/signage_script.pid
 echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
-killall omxplayer
-killall omxplayer.bin
 ramFileCopy
 wait $!
-videoPlayer
+if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
+	echo "Playing cached local file!"
+	videoPlayer
+fi
 
 while true; do
 	remoteFileTime=$(stat --format=%Y "${smbMountPoint}/${signName}.mp4") ##update the remote file MTIME every time the loop restarts
