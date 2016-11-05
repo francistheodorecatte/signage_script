@@ -27,24 +27,27 @@ echo "password=$smbPass" >> $userHome/.smbcredentials
 smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$userHome/.smbcredentials,user 0 0"
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
 scriptPID="cat /tmp/signage_script.pid"
-remoteMD5Hash=$((0))
-localMD5Hash=$((0))
+remoteMD5Hash=0
+localMD5Hash=0
+remoteFile="${smbMountPoint}/${signName}.mp4"
+localFile="${localFolder}/${signName}.mp4"
+ramFile="${ramDiskMountPoint}//${signName}.mp4"
 
 
 ##FUNCTIONS
 function remoteFileCopy {
-	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" &
+	cp -p $remoteFile $localFile &
 	wait $!
 	localFileTime=`md5sum -b ${localFolder}/${signName}.mp4 | awk '{print $1}'`
 }
 
 function ramFileCopy {
-	cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" &
+	cp -p $localFile $ramFile &
 }
 
 function videoPlayer {
 	killall omxplayer
-	omxplayer -b -o hdmi --loop --no-osd --no-keys --orientation $screenOrientation --aspect-mode $aspectMode "${ramDiskMountPoint}/${signName}.mp4" & 
+	omxplayer -b -o hdmi --loop --no-osd --no-keys --orientation $screenOrientation --aspect-mode $aspectMode $ramFile & 
 	##start omxplayer with a blanked background, output to hdmi, loop, turn off the on-screen display, and disable key controls
 	killall omxplayer.bin 
 }
@@ -100,17 +103,17 @@ echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID 
 
 ramFileCopy
 wait $!
-if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
+if [ "$(ls -A $ramFile" ]; then
 	echo "Playing cached local file!"
 	videoPlayer
 fi
 
 while true; do
-	remoteMD5Hash=`md5sum -b ${smbMontPoint}/${signName}.mp4 | awk '{print $1}'` ##update the remote file's MD5 hash every time the loop restarts
+	remoteMD5Hash=$(md5sum $remoteFile | cut -d ' ' -f 1) ##update the remote file's MD5 hash every time the loop restarts
 	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file time
-		localFileTime=`md5sum -b ${localFolder}/${signName}.mp4 | awk '{print $1}'`
+		localMD5Hash=$(md5sum $localFile | cut -d ' ' -f 1)
 	else
-		localFileTime=0
+		localMD5Hash=0
 	fi
 
 	if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then ##check if the local file has been copied to RAM
@@ -120,8 +123,8 @@ while true; do
 		wait $!
 	fi
 
-	if [ "$remoteFileTime" -gt "$localFileTime" ]; then
-		echo "Copying newer remote file."
+	if [ "$remoteMD5Hash" != "$localMD5Hash" ]; then
+		echo "Copying new remote file."
 		remoteFileCopy
 		wait $!
 		echo "Copying file into ram disk."
