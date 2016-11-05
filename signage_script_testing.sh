@@ -34,7 +34,7 @@ localMD5Hash=0
 ##FUNCTIONS
 function remoteFileCopy {
 	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" &
-	localFileTime='stat -c %Y "${local_folder}/${sign_name}.mp4"'
+	localFileTime=$(md5sum -b "${localFolder}/${signName}.mp4")
 }
 
 function ramFileCopy {
@@ -105,9 +105,9 @@ if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
 fi
 
 while true; do
-	remoteMD5Hash=$(md5sum -b ${smbMountPoint}/${signName}.mp4) ##update the remote file's MD5 hash every time the loop restarts
+	remoteMD5Hash=$(md5sum -b "${smbMountPoint}/${signName}.mp4") ##update the remote file's MD5 hash every time the loop restarts
 	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file time
-		localFileTime=$(md5sum -b ${localFolder}/${signName}.mp4)
+		localFileTime=$(md5sum -b "${localFolder}/${signName}.mp4")
 	else
 		localFileTime=0
 	fi
@@ -129,5 +129,5 @@ while true; do
 		videoPlayer
 	fi
 
-	sleep 60 ##sleep the infinite loop for one minute
+	sleep $checkInterval ##sleep the infinite loop for one minute
 done
