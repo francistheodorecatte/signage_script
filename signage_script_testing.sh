@@ -35,7 +35,7 @@ localMD5Hash=$((0))
 function remoteFileCopy {
 	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" &
 	wait $!
-	localMD5Hash=`md5sum -b ${localFolder}/${signName}.mp4 | awk '{print $1}'`
+	localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
 }
 
 function ramFileCopy {
@@ -106,7 +106,7 @@ if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
 fi
 
 while true; do
-	remoteMD5Hash=`md5sum -b "${smbMontPoint}/${signName}.mp4" | awk '{print $1}'` ##update the remote file's MD5 hash every time the loop restarts
+	remoteMD5Hash=`md5sum -b "${smbMountPoint}/${signName}.mp4" | awk '{print $1}'` ##update the remote file's MD5 hash every time the loop restarts
 	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file time
 		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
 	else
