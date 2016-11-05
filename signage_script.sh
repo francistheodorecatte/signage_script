@@ -1,6 +1,6 @@
 #!/bin/bash
 ##raspi automagik digital signage script
-##version .02c, written by Joseph Keller, 2016.
+##version .02d, written by Joseph Keller, 2016.
 ##run this app as root or with sudo privs!
 ##requires omxplayer, fbi and cifs-utils to work.
 
