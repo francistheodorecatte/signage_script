@@ -1,14 +1,15 @@
 #!/bin/bash
 ##raspi automagik digital signage script
-##version .02d, written by Joseph Keller, 2016.
+##version .03, written by Joseph Keller, 2016.
 ##run this app as root or with sudo privs!
-##requires omxplayer, fbi and cifs-utils to work.
+##requires omxplayer and cifs-utils to work.
 
 ##USER CFG
 configfile="./signage_script.cfg"
 configfile_secure="/tmp/signage_script.cfg"
 
 ##checking that nobody has done anything funny to the config file
+##thanks to the guy on the bash hackers wiki for this :)
 if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"; then
  	echo "Config file is unclean; cleaning..." >&2
 	##clean config's contents and move to clean version
@@ -99,6 +100,7 @@ fi
 rm /tmp/signage_script.pid
 echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
+##check for a local cached file and play that before moving on if it exists
 ramFileCopy
 wait $!
 if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
@@ -123,7 +125,10 @@ while true; do
 		wait $!
 	fi
 
-	if [ "$remoteMD5Hash" != "$localMD5Hash" ]; then
+	if [ "$remoteMD5Hash" = /dev/null ] ; then ##if md5sum doesn't have a valid file to check, the MD5 sum variable ends up being null
+		echo "No remote file found!"
+		echo "Please check remote drive and/or configuration for errors!"
+	elif [ "$remoteMD5Hash" != "$localMD5Hash" ]; then
 		echo "Copying newer remote file."
 		remoteFileCopy
 		wait $!
@@ -133,6 +138,6 @@ while true; do
 		videoPlayer
 	fi
 
-	sleep $checkInterval ##sleep the infinite loop for one minute
+	sleep $checkInterval ##sleep the infinite loop for specified interval
 done
 
