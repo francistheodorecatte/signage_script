@@ -23,11 +23,15 @@ else
 	sudo cp rclone.1 /usr/local/share/man/man1/
 	sudo mandb 
 	
-	echo "rclone now installed"
+	echo "rclone now installed... opening configuration."
+	rclone config &
+	wait $!
+
+if [ "rclone lsd remote:" ]; then
+	echo "rclone properly configured!"
+else
+	echo "please make sure rclone is configured and you're connected to the internet!"
+	echo "run rclone config if you've verified internet connectivity"
+	exit
 fi
 
-if [ "check for configured rclone returns true" ]; then
-	echo "rclone already configured!"
-else
-	rclone config
-fi
