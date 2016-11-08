@@ -19,10 +19,12 @@ fi
 
 source $configfile
 
-rm $userHome/.smbcredentials
-echo "username=$smbUser" >> $userHome/.smbcredentials
+sudo rm $HOME/.smbcredentials
+echo "username=$smbUser" >> $HOME/.smbcredentials
 sed -i -e '$a\' $HOME/.smbcredentials
-echo "password=$smbPass" >> $userHome/.smbcredentials
+echo "password=$smbPass" >> $HOME/.smbcredentials
+sudo chown root:root $HOME/.smbcredentials
+sudo chmod 600 $HOME/.smbcredentials 
 
 ##HARDCODED VARIABLES
 smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$userHome/.smbcredentials,user 0 0"
@@ -34,27 +36,27 @@ localMD5Hash=$((0))
 
 ##FUNCTIONS
 function remoteFileCopy {
-	cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" &
+	sudo cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" &
 	wait $!
 	localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
 	echo "local MD5 hash is: " $localMD5Hash
 }
 
 function ramFileCopy {
-	cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" &
+	sudo cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" &
 }
 
 function videoPlayer {
-	killall omxplayer
+	sudo killall omxplayer
 	omxplayer -b -o hdmi --loop --no-osd --no-keys --orientation $screenOrientation --aspect-mode $aspectMode "${ramDiskMountPoint}/${signName}.mp4" & 
 	##start omxplayer with a blanked background, output to hdmi, loop, turn off the on-screen display, and disable key controls
-	killall omxplayer.bin 
+	sudo killall omxplayer.bin 
 }
 
 ##MAIN PROGRAM
 
 if ps --pid $scriptPID > /dev/null; then ##check if script is already running
-	kill $scriptPID
+	sudo kill $scriptPID
 	if ps -p $scriptPID > /dev/null; then
 		echo "No previous script running!"
 	else
@@ -63,9 +65,9 @@ if ps --pid $scriptPID > /dev/null; then ##check if script is already running
 fi
 
 if grep -q '$ramDisk' /etc/fstab; then
-	mkdir $ramDiskMountPoint
-	sed -i -e '$a\' /etc/fstab  && echo "$ramDisk" >> /etc/fstab ##copy new ramdisk mounting lines to fstab
-	mount -a
+	sudo mkdir $ramDiskMountPoint
+	sudo sed -i -e '$a\' /etc/fstab  && echo "$ramDisk" >> /etc/fstab ##copy new ramdisk mounting lines to fstab
+	sudo mount -a
 	if [ "$(ls -A ${ramDiskMountPoint})" ]; then ##check if the ram disk is mounted
 		echo "ramdisk failed to mount!"
 		exit
@@ -77,8 +79,8 @@ else
 fi
 
 if grep -q '$smbDisk' /etc/fstab; then
-	mkdir $smbMountPoint
-	sed -i -e '$a\' /etc/fstab && echo "$smbDisk" >> /etc/fstab ##copy new smb mounting lines to fstab
+	sudo mkdir $smbMountPoint
+	sudo sed -i -e '$a\' /etc/fstab && echo "$smbDisk" >> /etc/fstab ##copy new smb mounting lines to fstab
 	mount -a
 	if [ "$(ls -A ${smbMountPoint})" ]; then
 		echo "SMB mounted!"
@@ -91,14 +93,14 @@ else
 	echo "fstab already updated with SMB"
 fi
 
-if [ "$(ls -A ${smbMountPoint})" ]; then
+if [ "$(ls -A ${localFolder})" ]; then
 	echo "Local folder already exists."
 else
-	mkdir $localFolder
+	sudo mkdir $localFolder
 fi
 
-rm /tmp/signage_script.pid
-echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
+sudo rm /tmp/signage_script.pid
+sudo echo $BASHPID >> /tmp/signage_script.pid ##write out this script instance's PID to a file
 
 ##check for a local cached file and play that before moving on if it exists
 ramFileCopy
