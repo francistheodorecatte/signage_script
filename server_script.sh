@@ -80,9 +80,9 @@ else
 	sudo apt-get install samba samba-common-bin 
 
 	##add some stuff to the smb config
-	echo -e "\nworkgroup = $workgroup" >> /etc/samba/smb.conf
-	echo -e "\nwins support = yes" >> etc/samba/smb.conf
-	echo -e "\n\n[$smbName]\n   comment= :)\n   path=$smbPath\n   browseable=Yes\n   writeable=no\n   only guest=no\n   create mask=0777\n   directory mask=0777\n   public=no"
+	sudo echo -e "\nworkgroup = $workgroup" >> /etc/samba/smb.conf
+	sudo echo -e "\nwins support = yes" >> /etc/samba/smb.conf
+	sudo echo -e "\n\n[$smbName]\n   comment= :)\n   path=$smbPath\n   browseable=Yes\n   writeable=no\n   only guest=no\n   create mask=0777\n   directory mask=0777\n   public=no"
 	
 	echo "now enter your user's password twice and the smb server will be configured"
 	smbpasswd -a $USER
