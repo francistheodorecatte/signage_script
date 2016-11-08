@@ -1,8 +1,8 @@
 #!/bin/bash
 ##Server Script companion for the Rasberry Pi digital signage script.
 ##Version .01 by Joseph Keller, 2016
-##Pulls videos for display down from Google Drive, automatically renames them, and puts them in an SMB file share.
-##Requires a full Rasbian installation and rclone to work
+##Pulls videos for display down from Google Drive (or any other cloud storage rclone supports,) automatically renames them, and puts them in an SMB file share.
+##Requires a full Rasbian installation and rclone to work, though it should install rclone for you!
 
 # USER CONFIG
 configfile="./server_script.cfg"
@@ -46,7 +46,7 @@ fi
 
 ##setting the remote drive variable
 ##make sure the first drive you see in the output of 'rclone listremotes' is the one you want to use
-remoteDrive = `rclone listremotes | awk 'NR == 1' $1`
+remoteDrive=`rclone listremotes | awk 'NR == 1' $1`
 
 if [ "rclone lsd $remoteDrive" ]; then 
 	echo "rclone properly configured!"
@@ -100,6 +100,17 @@ while true; do
 	else
 		echo "now checking for new files"
 
+		signCount=`rclone lsd $remoteDrive | grep -o '-1 sign' | wc -l` ##cloud storage folders should be named sign0-sign99, etc.
+		##or at least the script will assume that for now
+		##this counts the number of signs there are
+
+		signNames=()
+		COUNTER=0
+		until [ $COUNTER = $signCount+1; do ##putting the sign names into an array
+			signTemp="sign"+$COUNTER
+			$signNames+=("$signTemp")
+			$COUNTER=$COUNTER+1 ##increment the counter by one
+		done
 	fi
 	
 	wait $checkInterval
