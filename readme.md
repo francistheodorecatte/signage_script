@@ -12,7 +12,7 @@ It requires omxplayer and cifs-utils to work. If you want to keep your Pi from b
 
 The server does a similar thing as the client side, checking for newer video versions on a Google Drive (or any other cloud storage setup rclone supports.) If there's a newer version, the script downloads it, automatically renames it if needed, and drops it into an SMB file share the server hosts.
 
-This Pi requires a full Rasbian setup (not the lite distro), as well as rclone, to work.
+This Pi requires a full Rasbian setup (not the lite distro), as well as rclone, to work. However, the script will install and configure rclone with only a little user interaction. :)
 
 ## Disclaimers
 
