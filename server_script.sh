@@ -26,12 +26,20 @@ else
 	echo "rclone now installed... opening configuration."
 	rclone config &
 	wait $!
+	##if using google drive, use your own client_id!
+	##follow the instructions at the bottom of this page:
+	##https://rclone.org/drive/
+fi
 
-if [ "rclone lsd remote:" ]; then
+##setting the remote drive variable
+##make sure the first drive you see in the output of 'rclone listremotes' is the one you want to use
+remoteDrive = `rclone listremotes | awk 'NR == 1' $1`
+
+if [ "rclone lsd $remoteDrive" ]; then
 	echo "rclone properly configured!"
 else
 	echo "please make sure rclone is configured and you're connected to the internet!"
-	echo "run rclone config if you've verified internet connectivity"
+	echo "run 'rclone config' if you've verified internet connectivity"
 	exit
 fi
 
