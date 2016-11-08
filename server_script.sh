@@ -57,8 +57,24 @@ fi
 
 ##setup SMB
 
-if [ "no smb setup" ]; then
-	echo "no samba server found!"
+if [ "ps -p $(pidof smbd)" ]; then ##test if samba is even running
+	echo "samba server already running!"
+elif [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1" ]; then ##test if our smb server is running
+	echo "samba is already configured but not running!"
+	sudo service start samba
+	if [ "ps -p $(pidof smbd)" ]; then ##double checking everything is okay
+		if [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1" ];
+			echo "samba server is now running"
+		else
+			echo "samba server is not configured properly and failing to start!\nplease check its configuration and run the script again."
+			exit
+		fi
+	else
+		echo "samba server is not configured properly and failing to start!\nplease check its configuration and run the script again."
+		exit
+	fi
+else
+	echo "samba not running or configured!"
 
 	##make sure samba is installed
 	sudo apt-get install samba samba-common-bin 
@@ -66,15 +82,21 @@ if [ "no smb setup" ]; then
 	##add some stuff to the smb config
 	echo -e "\nworkgroup = $workgroup" >> /etc/samba/smb.conf
 	echo -e "\nwins support = yes" >> etc/samba/smb.conf
-	echo -e "\n\n[signageServer]\n   comment=signage server\n   path=$smbPath\n   browseable=Yes\n   writeable=no\n   only guest=no\n   create mask=0777\n   directory mask=0777\n   public=no"
+	echo -e "\n\n[$smbName]\n   comment= :)\n   path=$smbPath\n   browseable=Yes\n   writeable=no\n   only guest=no\n   create mask=0777\n   directory mask=0777\n   public=no"
 	
-	echo "Now enter your user's password twice and the smb server will be configured"
+	echo "now enter your user's password twice and the smb server will be configured"
 	smbpasswd -a $USER
+	wait $1
+
+	echo "script will now exit.\nrun it again to test if everything is okay now!"
+	exit
 fi
 
 ##main loop
 
-##fi
+while true; do
+	
+done
 
 
 
