@@ -4,7 +4,7 @@
 ##run this app as root or with sudo privs!
 ##requires omxplayer and cifs-utils to work.
 
-##USER CFG
+# USER CFG
 configfile="./signage_script.cfg"
 configfile_secure="/tmp/signage_script.cfg"
 
@@ -26,7 +26,7 @@ echo "password=$smbPass" >> $HOME/.smbcredentials
 sudo chown root:root $HOME/.smbcredentials
 sudo chmod 600 $HOME/.smbcredentials 
 
-##HARDCODED VARIABLES
+# HARDCODED VARIABLES
 smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$userHome/.smbcredentials,user 0 0"
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
 scriptPID="cat /tmp/signage_script.pid"
@@ -34,7 +34,7 @@ remoteMD5Hash=$((0))
 localMD5Hash=$((0))
 
 
-##FUNCTIONS
+# FUNCTIONS
 function remoteFileCopy {
 	sudo cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" &
 	wait $!
@@ -53,7 +53,7 @@ function videoPlayer {
 	sudo killall omxplayer.bin 
 }
 
-##MAIN PROGRAM
+# MAIN PROGRAM
 
 if ps --pid $scriptPID > /dev/null; then ##check if script is already running
 	sudo kill $scriptPID

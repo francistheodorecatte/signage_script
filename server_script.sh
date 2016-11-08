@@ -5,6 +5,19 @@
 ##Requires a full Rasbian installation and rclone to work
 
 # USER CONFIG
+configfile="./server_script.cfg"
+configfile_secure="/tmp/server_script.cfg"
+
+##checking that nobody has done anything funny to the config file
+##thanks to the guy on the bash hackers wiki for this :)
+if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"; then
+ 	echo "Config file is unclean; cleaning..." >&2
+	##clean config's contents and move to clean version
+ 	egrep '^#|^[^ ]*=[^;&]*'  "$configfile" > "$configfile_secured"
+ 	configfile="$configfile_secured"
+fi
+
+source $configfile
 
 # MAIN PROGRAM
 if [ "$(ls -A /usr/sbin/rclone" ]; then
@@ -12,10 +25,8 @@ if [ "$(ls -A /usr/sbin/rclone" ]; then
 else
 	echo "installing rclone now"
 	##download rclone
-	curl -O http://downloads.rclone.org/rclone-current-linux-amd64.zip &
-	wait $!
-	unzip rclone-current-linux-amd64.zip &
-	wait $!rclone.org/drive/
+	curl -O http://downloads.rclone.org/rclone-current-linux-amd64.zip
+	unzip rclone-current-linux-amd64.zip
 	cd rclone-*-linux-amd64
 
 	##copy rclone and its manpage
@@ -45,6 +56,21 @@ else
 fi
 
 ##setup SMB
+
+if [ "no smb setup" ]; then
+	echo "no samba server found!"
+
+	##make sure samba is installed
+	sudo apt-get install samba samba-common-bin 
+
+	##add some stuff to the smb config
+	echo -e "\nworkgroup = $workgroup" >> /etc/samba/smb.conf
+	echo -e "\nwins support = yes" >> etc/samba/smb.conf
+	echo -e "\n\n[signageServer]\n   comment=signage server\n   path=$smbPath\n   browseable=Yes\n   writeable=no\n   only guest=no\n   create mask=0777\n   directory mask=0777\n   public=no"
+	
+	echo "Now enter your user's password twice and the smb server will be configured"
+	smbpasswd -a $USER
+fi
 
 ##main loop
 
