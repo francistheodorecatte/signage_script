@@ -95,7 +95,14 @@ fi
 ##main loop
 
 while true; do
+	if [ "rclone ls $remoteDrive | grep 'Failed to create file system' $1" ]; then
+		echo "internet connection is down! waiting $checkInterval seconds before trying again"
+	else
+		echo "now checking for new files"
+
+	fi
 	
+	wait $checkInterval
 done
 
 
