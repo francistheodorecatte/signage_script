@@ -95,17 +95,31 @@ fi
 ##main loop
 
 while true; do
-	if [ "rclone ls $remoteDrive | grep 'Failed to create file system' $1" ]; then
+	ethStatus=`cat /sys/class/net/eth0/operstate`
+	if [ $ethStatus = "down" ]
+		echo "network connection is down! check the eth0 interface."
+	elif [ "rclone ls $remoteDrive | grep 'Failed to create file system' $1" ]; then
 		echo "internet connection is down! waiting $checkInterval seconds before trying again"
 	else
-		echo "now checking for new files"
+		ethBroadcast=`ifconfig wlan0 | grep -o -P '(?<=Bcast:)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\s'`
+		ping -b $ethBroadcast
+		piAddrList=( $(arp | grep bc:8c:cd:30) )
+		piAddrListLength=${#piAddrList[@]}
+		COUNTER=0
+		echo "Pi's detected:"
+		until [ $COUNTER = $piAddrListLength+1 ]; do
+			echo $piAddrList($COUNTER)
+			$COUNTER=$COUNTER+1
+		done
+
+		echo "\n\nnow checking for new files"
 
 		signCount=`rclone lsd $remoteDrive | grep -o '-1 Sign' | wc -l` ##cloud storage folders should be named Sign0-Sign99, etc.
 		##or at least the script will assume that for now
 		##this counts the number of signs there are
 
 		signNames=()
-		COUNTER=0
+		$COUNTER=0
 		until [ $COUNTER = $signCount+1 ]; do ##putting the sign names into an array
 			signTemp="sign"+$COUNTER
 			$signNames+=("$signTemp")
