@@ -101,13 +101,12 @@ while true; do
 	elif [ "rclone ls $remoteDrive | grep 'Failed to create file system' $1" ]; then
 		echo "internet connection is down! waiting $checkInterval seconds before trying again"
 	else
-		ethBroadcast=`ifconfig wlan0 | grep -o -P '(?<=Bcast:)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\s'`
+		ethBroadcast=`ifconfig eth0 | grep -o -P '(?<=Bcast:)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\s'` ##get the broadcast IP of the current network
 		ping -b $ethBroadcast
-		piAddrList=( $(arp | grep bc:8c:cd:30) )
-		piAddrListLength=${#piAddrList[@]}
+		piAddrList=( $(arp | grep bc:8c:cd:30) ) ##grab the IP's of all the Pi's via the arp cash and put them in an array
 		COUNTER=0
 		echo "Pi's detected:"
-		until [ $COUNTER = $piAddrListLength+1 ]; do
+		until [ $COUNTER = $piAddrList[@] ]; do ##and print them out
 			echo $piAddrList($COUNTER)
 			$COUNTER=$COUNTER+1
 		done
