@@ -114,7 +114,7 @@ while true; do
 
 		$COUNTER=0
 		until [ $COUNTER = $signCount+1 ]; do
-			echo signNames($COUNTER)
+			echo $signNames($COUNTER)
 			$COUNTER=$COUNTER+1
 		done
 	fi
