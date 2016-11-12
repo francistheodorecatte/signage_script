@@ -30,11 +30,11 @@ else
 	cd rclone-*-linux-amd64
 
 	##copy rclone and its manpage
-	sudo cp rclone /usr/sbin/
-	sudo chown root:root /usr/sbin/rclone
-	sudo chmod 755 /usr/sbin/rclone
-	sudo mkdir -p /usr/local/share/man/man1
-	sudo cp rclone.1 /usr/local/share/man/man1/
+	sudo cp rclone `/usr/sbin/`
+	sudo chown root:root `/usr/sbin/rclone`
+	sudo chmod 755 `/usr/sbin/rclone`
+	sudo mkdir -p `/usr/local/share/man/man1`
+	sudo cp rclone.1 `/usr/local/share/man/man1/`
 	sudo mandb 
 	
 	echo "rclone now installed... opening configuration."
@@ -100,16 +100,22 @@ while true; do
 	else
 		echo "now checking for new files"
 
-		signCount=`rclone lsd $remoteDrive | grep -o '-1 sign' | wc -l` ##cloud storage folders should be named sign0-sign99, etc.
+		signCount=`rclone lsd $remoteDrive | grep -o '-1 Sign' | wc -l` ##cloud storage folders should be named Sign0-Sign99, etc.
 		##or at least the script will assume that for now
 		##this counts the number of signs there are
 
 		signNames=()
 		COUNTER=0
-		until [ $COUNTER = $signCount+1; do ##putting the sign names into an array
+		until [ $COUNTER = $signCount+1 ]; do ##putting the sign names into an array
 			signTemp="sign"+$COUNTER
 			$signNames+=("$signTemp")
 			$COUNTER=$COUNTER+1 ##increment the counter by one
+		done
+
+		$COUNTER=0
+		until [ $COUNTER = $signCount+1 ]; do
+			echo signNames($COUNTER)
+			$COUNTER=$COUNTER+1
 		done
 	fi
 	
