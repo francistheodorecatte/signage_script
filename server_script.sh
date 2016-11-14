@@ -109,20 +109,7 @@ while true; do
 		signCount=`rclone lsd $remoteDrive | grep -o '-1 Sign' | wc -l` ##cloud storage folders should be named Sign0-Sign99, etc.
 		##or at least the script will assume that for now
 		##this counts the number of signs there are
-
-		signNames=()
-		$COUNTER=0
-		until [ $COUNTER = $signCount+1 ]; do ##putting the sign names into an array
-			signTemp="sign"+$COUNTER
-			$signNames+=("$signTemp")
-			$COUNTER=$COUNTER+1 ##increment the counter by one
-		done
-
-		$COUNTER=0 
-		until [ $COUNTER = $signCount+1 ]; do ##this is just for testing
-			echo $signNames($COUNTER)
-			$COUNTER=$COUNTER+1
-		done
+		echo $signCount
 	fi
 	
 	wait $checkInterval
