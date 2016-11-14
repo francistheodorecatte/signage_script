@@ -73,7 +73,7 @@ elif [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1" ]; then ##test if our sm
 		echo "samba server is not configured properly and failing to start!\nplease check its configuration and run the script again."
 		exit
 	fi
-else
+else; do
 	echo "samba not running or configured!"
 
 	##make sure samba is installed
