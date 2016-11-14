@@ -83,12 +83,13 @@ else
 	sudo apt-get install -y samba samba-common-bin 
 
 	##add some stuff to the smb config
-	sudo echo -e "\nworkgroup = $workgroup" >> /etc/samba/smb.conf
-	sudo echo -e "\nwins support = yes" >> /etc/samba/smb.conf
-	sudo echo -e "\n\n[$smbName]\n   comment= :)\n   path=$smbPath\n   browseable=Yes\n   writeable=no\n   only guest=no\n   create mask=0777\n   directory mask=0777\n   public=no"
+	echo -e "# signage_script" | sudo tee /etc/samba/smb.conf
+	echo -e "\nworkgroup = $workgroup" | sudo tee /etc/samba/smb.conf
+	echo -e "\nwins support = yes" | sudo tee /etc/samba/smb.conf
+	echo -e "\n\n[$smbName]\n   comment= :)\n   path=$smbPath\n   browseable=Yes\n   writeable=no\n   only guest=no\n   create mask=0777\n   directory mask=0777\n   public=no" | sudo tee /etc/samba/smb.conf
 	
 	echo "now enter your user's password twice and the smb server will be configured"
-	smbpasswd -a $USER
+	smbpasswd -a 
 	wait $1
 
 	echo "script will now exit.\nrun it again to test if everything is okay now!"
