@@ -111,6 +111,12 @@ while true; do
 		##this counts the number of signs there are
 		echo "sign count is: $signCount"
 	fi
+
+	##check if sign names exist in SMB dir
+	##make them if not
+
+	##check local md5 sum and compare to one on the google drive
+	##copy new files to SMB dir and make sure they're named correctly if md5 sums do not match
 	
 	echo "waiting $checkInterval seconds"
 	sleep $checkInterval
