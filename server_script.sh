@@ -122,7 +122,7 @@ while true; do
 			if [ "$(ls -al $smbPath/${signNames[$c]})" ]; then
 				echo "local dir for ${signNames[$c]} already created!"
 			else
-				echo "making directory $smbDir/${signNames[$c]}"
+				echo "making directory $smbPath/${signNames[$c]}"
 				sudo mkdir "$smbPath/${signNames[$c]}"
 			fi
 			c=$((c+1))
