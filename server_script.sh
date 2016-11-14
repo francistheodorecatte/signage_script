@@ -20,7 +20,7 @@ fi
 source $configfile
 
 # MAIN PROGRAM
-if [ "$(ls -A /usr/sbin/rclone" ]; then
+if [ "$(ls -A /usr/sbin/rclone)" ]; then
 	echo "rclone already installed!"
 else
 	echo "installing rclone now"
