@@ -50,6 +50,7 @@ fi
 ##setting the remote drive variable
 ##make sure the first drive you see in the output of 'rclone listremotes' is the one you want to use
 remoteDrive=`rclone listremotes | awk 'NR == 1' $1`
+echo $remoteDrive
 
 if [ "rclone lsd $remoteDrive" ]; then 
 	echo "rclone properly configured!"
@@ -112,6 +113,6 @@ while true; do
 		echo $signCount
 	fi
 	
-	wait $checkInterval
+	sleep $checkInterval
 done
 
