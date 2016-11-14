@@ -112,8 +112,13 @@ while true; do
 		signNames=()
 		c=0
 		until [ $c = $[$signCount+1] ]; do ##putting the sign names into an array
-			signTemp="Sign$c"
+			if [ $c -lt 10 ]; do
+				signTemp="Sign0$c"
+			else
+				signTemp="Sign$c"
+			fi
 			signNames[$c]=$signTemp
+
 			c=$((c+1)) ##increment the counter by one
 		done
 
