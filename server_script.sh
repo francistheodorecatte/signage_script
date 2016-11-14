@@ -112,7 +112,7 @@ while true; do
 		signNames=()
 		c=0
 		until [ $c = $[$signCount+1] ]; do ##putting the sign names into an array
-			if [ $c -lt 10 ]; do
+			if [ $c -lt 10 ]; then
 				signTemp="Sign0$c"
 			else
 				signTemp="Sign$c"
