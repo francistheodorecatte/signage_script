@@ -80,7 +80,7 @@ else
 	echo "samba not running or configured!"
 
 	##make sure samba is installed
-	sudo apt-get install -y samba samba-common-bin 
+	sudo apt-get install -y samba samba-common-bin smbclient
 
 	##add some stuff to the smb config
 	echo -e "# signage_script\nworkgroup = $workgroup\nwins support = yes\n\n[$smbName]\n   comment= :)\n   path=$smbPath\n   browseable=Yes\n   writeable=no\n   only guest=no\n   create mask=0777\n   directory mask=0777\n   public=no" | sudo tee /etc/samba/smb.conf
@@ -89,7 +89,7 @@ else
 	sudo smbpasswd -a signage
 	wait $1
 
-	echo -e "script will now exit.\nrun it again to test if everything is okay now!"
+	echo "script will now exit.\nrun it again to test if everything is okay now!"
 	exit
 fi
 
