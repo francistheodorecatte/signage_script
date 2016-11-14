@@ -60,12 +60,12 @@ fi
 
 ##setup SMB
 
-if [ "ps -A | grep smbd" ]; then ##test if samba is even running
+if [ "ps -A | grep smbd | echo $?" = 0 ]; then ##test if samba is even running
 	echo "samba server already running!"
 elif [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1" ]; then ##test if our smb server is running
 	echo "samba is already configured but not running!"
 	sudo service start samba
-	if [ "ps -p $(pidof smbd)" ]; then ##double checking everything is okay
+	if [ "ps -A | grep smbd" ]; then ##double checking everything is okay
 		if [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1" ]; then
 			echo "samba server is now running"
 		else
@@ -119,9 +119,12 @@ while true; do
 			c=$((c+1)) ##increment the counter by one
 		done
 
-		echo "printing sign names"
-		printf '%s\n' "${signNames[@]}"
-
+		c=0
+		until [ $c = $[$signCount+1] ]; do
+			if [ "ls-al $smbDir/${signNames[$c]}" ]; then
+				echo "local dir for ${signNames[$c]} already created!"
+			else
+				mkdir $smbDir/${signNames
 		##check if sign names exist in SMB dir
 		##make them if not
 
