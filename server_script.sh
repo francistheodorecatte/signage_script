@@ -111,6 +111,7 @@ while true; do
 		##this counts the number of signs there are
 		echo "sign count is: $signCount"
 
+		signNames=()
 		c=0
 		until [ $c = $[$signCount+1] ]; do ##putting the sign names into an array
 			signTemp="Sign$c"
@@ -122,7 +123,7 @@ while true; do
 
 		c=0 
 		until [ c=$((signCount+1)) ]; do ##this is just for testing
-			echo $signNames[$c]
+			echo ${signNames[$c]}
 			echo $c
 			c=$((c+1))
 		done
