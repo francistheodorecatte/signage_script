@@ -110,13 +110,21 @@ while true; do
 		##or at least the script will assume that for now
 		##this counts the number of signs there are
 		echo "sign count is: $signCount"
-	fi
+
+		signNames=()
+		$COUNTER=0
+		until [ $COUNTER = $signCount+1 ]; do ##putting the sign names into an array
+			signTemp="Sign"+$COUNTER
+			$signNames+=("$signTemp")
+			$COUNTER=$COUNTER+1 ##increment the counter by one
+		done
 
 	##check if sign names exist in SMB dir
 	##make them if not
 
 	##check local md5 sum and compare to one on the google drive
 	##copy new files to SMB dir and make sure they're named correctly if md5 sums do not match
+	fi
 	
 	echo "waiting $checkInterval seconds"
 	sleep $checkInterval
