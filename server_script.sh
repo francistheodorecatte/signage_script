@@ -40,8 +40,6 @@ else
 	echo "rclone now installed... opening configuration."
 	rclone config &
 	wait $!
-	echo -e "if using google drive, use your own client_id!\nfollow the instructions at the bottom of this page:\nhttps://rclone.org/drive/ "
-	wait 5
 fi
 
 exit
