@@ -106,12 +106,13 @@ while true; do
 	else
 		echo -e "\n\nnow checking for new files"
 
-		signCount=`rclone -q lsd $remoteDrive | grep -o '-1 Sign' | wc -l` ##cloud storage folders should be named Sign0-Sign99, etc.
+		signCount=`rclone -q lsd $remoteDrive | grep '-1 Sign' | wc -l` ##cloud storage folders should be named Sign0-Sign99, etc.
 		##or at least the script will assume that for now
 		##this counts the number of signs there are
 		echo "sign count is: $signCount"
 	fi
 	
+	echo "waiting $checkInterval seconds"
 	sleep $checkInterval
 done
 
