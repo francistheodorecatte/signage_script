@@ -104,12 +104,12 @@ while true; do
 	elif [ "rclone -q ls $remoteDrive | echo $?" = 0 ]; then
 		echo "internet connection is down! waiting $checkInterval seconds before trying again"
 	else
-		echo "\n\nnow checking for new files"
+		echo -e "\n\nnow checking for new files"
 
 		signCount=`rclone -q lsd $remoteDrive | grep -o '-1 Sign' | wc -l` ##cloud storage folders should be named Sign0-Sign99, etc.
 		##or at least the script will assume that for now
 		##this counts the number of signs there are
-		echo $signCount
+		echo "sign count is: $signCount"
 	fi
 	
 	sleep $checkInterval
