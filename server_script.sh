@@ -44,7 +44,7 @@ else
 	sleep 5
 	echo "cleaning up..."
 	cd ..
-	sudo rm -rf rclone-current*
+	sudo rm -rf rclone-*
 fi
 
 ##setting the remote drive variable
@@ -122,8 +122,10 @@ while true; do
 			if [ "$(ls -al $smbDir/${signNames[$c]})" ]; then
 				echo "local dir for ${signNames[$c]} already created!"
 			else
+				echo "making directory $smbDir/${signNames}"
 				sudo mkdir "$smbDir/${signNames}"
 			fi
+			echo $c
 			c=$((c+1))
 		done
 	fi
