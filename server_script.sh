@@ -113,14 +113,17 @@ while true; do
 
 		c=0
 		until [ $c = $[$signCount+1] ]; do ##putting the sign names into an array
-			signTemp="Sign $c"
+			signTemp="Sign$c"
+			echo $signTemp
 			signNames[$c]=$signTemp
+			echo $c
 			c=$((c+1)) ##increment the counter by one
 		done
 
 		c=0 
 		until [ c=$((signCount+1)) ]; do ##this is just for testing
 			echo $signNames[$c]
+			echo $c
 			c=$((c+1))
 		done
 
