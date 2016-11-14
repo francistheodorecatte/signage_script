@@ -119,14 +119,12 @@ while true; do
 
 		c=0
 		until [ $c = $[$signCount+1] ]; do
-			echo ${signNames[$c]}
 			if [ "$(ls -al $smbDir/${signNames[$c]})" ]; then
 				echo "local dir for ${signNames[$c]} already created!"
 			else
-				echo "making directory $smbDir/${signNames}"
-				sudo mkdir "$smbDir/${signNames}"
+				echo "making directory $smbDir/${signNames[$c]}"
+				sudo mkdir "$smbDir/${signNames[$c]}"
 			fi
-			echo $c
 			c=$((c+1))
 		done
 	fi
