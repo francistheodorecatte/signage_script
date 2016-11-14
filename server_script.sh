@@ -101,7 +101,7 @@ while true; do
 	ethStatus=`cat /sys/class/net/eth0/operstate`
 	if [ $ethStatus = "down" ]; then
 		echo "network connection is down! check the eth0 interface."
-	elif [ "rclone -q ls $remoteDrive | grep Failed $1" ]; then
+	elif [ "rclone -q ls $remoteDrive | echo $?" = 0]; then
 		echo "internet connection is down! waiting $checkInterval seconds before trying again"
 	else
 		echo "\n\nnow checking for new files"
