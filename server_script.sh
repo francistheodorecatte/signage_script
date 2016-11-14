@@ -119,6 +119,7 @@ while true; do
 
 		c=0
 		until [ $c = $[$signCount+1] ]; do
+			echo ${signNames[$c]}
 			if [ "$(ls -al $smbDir/${signNames[$c]})" ]; then
 				echo "local dir for ${signNames[$c]} already created!"
 			else
