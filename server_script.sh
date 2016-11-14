@@ -19,6 +19,8 @@ fi
 
 source $configfile
 
+null=`cat /dev/null`
+
 # MAIN PROGRAM
 if [ "$(ls -A /usr/sbin/rclone)" ]; then
 	echo "rclone already installed!"
@@ -95,7 +97,7 @@ fi
 
 ##check your local folder actually exists
 ##assumes it's a drive mounted to a folder
-if [ "$(df | grep $smbPath)" = "/dev/null" ]; then
+if [ "$(df | grep $smbPath)" = $null ]; then
 	echo -e "the local file path isn't mounted!\nplease check your fstab and run the script again"
 	exit
 fi
@@ -129,7 +131,7 @@ while true; do
 			c=$((c+1)) ##increment the counter by one
 		done
 
-		if [ "$(df | grep $smbPath)" = "/dev/null" ]; then ##sanity checking to see if the local file path exists again
+		if [ "$(df | grep $smbPath)" = $null ]; then ##sanity checking to see if the local file path exists again
 			echo -e "the local file path isn't mounted!\nplease check your fstab and run the script again"
 			exit
 		fi
@@ -148,7 +150,7 @@ while true; do
 
 		c=0
 		until [ $c = $[$signCount+1] ]; do 
-			if [ "$(rclone -q check $remoteDrive${signNames[$c]})" = "/dev/null" ]; then
+			if [ "$(rclone -q check $remoteDrive${signNames[$c]})" = $null ]; then
 				echo "no newer remote files found for ${signNames[$c]}"
 			else
 				echo "syncing from remote drive"
