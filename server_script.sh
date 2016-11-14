@@ -30,17 +30,17 @@ else
 	cd rclone-*-linux-amd64
 
 	##copy rclone and its manpage
-	sudo cp rclone `/usr/sbin/`
-	sudo chown root:root `/usr/sbin/rclone`
-	sudo chmod 755 `/usr/sbin/rclone`
-	sudo mkdir -p `/usr/local/share/man/man1`
-	sudo cp rclone.1 `/usr/local/share/man/man1/`
+	sudo cp rclone "/usr/sbin/"
+	sudo chown root:root "/usr/sbin/rclone"
+	sudo chmod 755 "/usr/sbin/rclone"
+	sudo mkdir -p "/usr/local/share/man/man1"
+	sudo cp rclone.1 "/usr/local/share/man/man1/"
 	sudo mandb 
 	
 	echo "rclone now installed... opening configuration."
 	rclone config &
 	wait $!
-	echo -e "if using google drive, use your own client_id!\nfollow the instructions at the bottom of this page:\nhttps://rclone.org/drive/"
+	echo -e "if using google drive, use your own client_id!\nfollow the instructions at the bottom of this page:\n\'https://rclone.org/drive/\'"
 	wait 5
 fi
 
