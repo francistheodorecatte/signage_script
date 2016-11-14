@@ -126,12 +126,10 @@ while true; do
 			fi
 			c=$((c+1))
 		done
-
-		##check local md5 sum and compare to one on the google drive
-		##copy new files to SMB dir and make sure they're named correctly if md5 sums do not match
 	fi
 	
 	echo "waiting $checkInterval seconds"
 	sleep $checkInterval
 done
 
+exit
