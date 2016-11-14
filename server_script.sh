@@ -60,7 +60,7 @@ fi
 
 ##setup SMB
 
-if [ "ps -p $(pidof smbd)" ]; then ##test if samba is even running
+if [ "ps -A | grep smbd" ]; then ##test if samba is even running
 	echo "samba server already running!"
 elif [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1" ]; then ##test if our smb server is running
 	echo "samba is already configured but not running!"
