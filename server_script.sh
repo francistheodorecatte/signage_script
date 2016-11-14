@@ -1,6 +1,6 @@
 #!/bin/bash
 ##Server Script companion for the Rasberry Pi digital signage script.
-##Version .01 by Joseph Keller, 2016
+##Version .01d by Joseph Keller, 2016
 ##Pulls videos for display down from Google Drive (or any other cloud storage rclone supports,) automatically renames them, and puts them in an SMB file share.
 ##Requires a full Rasbian installation and rclone to work, though it should install rclone for you!
 
@@ -44,7 +44,7 @@ else
 	sleep 5
 	echo "cleaning up..."
 	cd ..
-	sudo rm -rf rclone-*
+	sudo rm -rf rclone-* ##this is dangerous, I know
 fi
 
 ##setting the remote drive variable
@@ -86,7 +86,7 @@ else
 	echo -e "# signage_script\nworkgroup = $workgroup\nwins support = yes\n\n[$smbName]\n   comment= :)\n   path=$smbPath\n   browseable=Yes\n   writeable=no\n   only guest=no\n   create mask=0777\n   directory mask=0777\n   public=no" | sudo tee /etc/samba/smb.conf
 	
 	echo "now enter $smbUser's password twice and the smb server will be configured"
-	sudo smbpasswd -a signage
+	sudo smbpasswd -a $smbUser
 	wait $1
 
 	echo "script will now exit.\nrun it again to test if everything is okay now!"
@@ -123,14 +123,25 @@ while true; do
 		done
 
 		c=0
-		until [ $c = $[$signCount+1] ]; do
+		until [ $c = $[$signCount+1] ]; do ##checking if the sign names have a local folder
 			if [ "$(ls -al $smbPath/${signNames[$c]})" ]; then
-				echo "local dir for ${signNames[$c]} already created!"
+				echo "local dir for ${signNames[$c]} already created!" 
 			else
-				echo "making directory $smbPath/${signNames[$c]}"
+				echo "making directory $smbPath/${signNames[$c]}" ##make them if not
 				sudo mkdir "$smbPath/${signNames[$c]}"
 			fi
+			
 			c=$((c+1))
+		done
+
+		c=0
+		until [ $c = $[$signCount+1] ]; do 
+			if [ "$(rclone -q check $remoteDrive${signNames[$c]})" = "/dev/null" ]; then
+				echo "no newer remote files found for ${signNames[$c]}"
+			else
+				echo "syncing from remote drive"
+				rclone -q sync $remoteDrive${signNames[$c]} $smbPath/${signNames[$c]}
+			fi
 		done
 	fi
 	
