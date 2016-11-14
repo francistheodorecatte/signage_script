@@ -116,15 +116,20 @@ while true; do
 		until [ $c = $[$signCount+1] ]; do ##putting the sign names into an array
 			signTemp="Sign $c"
 			signNames[$c]=$signTemp
-			echo $c
 			c=$((c+1)) ##increment the counter by one
 		done
 
-	##check if sign names exist in SMB dir
-	##make them if not
+		c=0 
+		until [ c=$((signCount+1)) ]; do ##this is just for testing
+			echo $signNames($c)
+			c=$((c+1))
+		done
 
-	##check local md5 sum and compare to one on the google drive
-	##copy new files to SMB dir and make sure they're named correctly if md5 sums do not match
+		##check if sign names exist in SMB dir
+		##make them if not
+
+		##check local md5 sum and compare to one on the google drive
+		##copy new files to SMB dir and make sure they're named correctly if md5 sums do not match
 	fi
 	
 	echo "waiting $checkInterval seconds"
