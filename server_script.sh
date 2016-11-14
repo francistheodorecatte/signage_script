@@ -121,7 +121,7 @@ while true; do
 
 		c=0 
 		until [ c=$((signCount+1)) ]; do ##this is just for testing
-			echo $signNames($c)
+			echo $signNames[$c]
 			c=$((c+1))
 		done
 
