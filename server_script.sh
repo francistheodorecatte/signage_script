@@ -123,8 +123,8 @@ while true; do
 				echo "local dir for ${signNames[$c]} already created!"
 			else
 				mkdir $smbDir/${signNames
-		##check if sign names exist in SMB dir
-		##make them if not
+			fi
+		done
 
 		##check local md5 sum and compare to one on the google drive
 		##copy new files to SMB dir and make sure they're named correctly if md5 sums do not match
