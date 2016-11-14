@@ -124,6 +124,7 @@ while true; do
 			else
 				mkdir $smbDir/${signNames
 			fi
+			c=$((c+1))
 		done
 
 		##check local md5 sum and compare to one on the google drive
