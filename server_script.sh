@@ -115,8 +115,8 @@ while true; do
 		$COUNTER=0
 		until [ $COUNTER = $signCount+1 ]; do ##putting the sign names into an array
 			signTemp="Sign"+$COUNTER
-			$signNames+=("$signTemp")
-			$COUNTER=$((COUNTER+1)) ##increment the counter by one
+			signNames+=('$signTemp')
+			$COUNTER=$COUNTER+1 ##increment the counter by one
 		done
 
 	##check if sign names exist in SMB dir
