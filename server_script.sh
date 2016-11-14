@@ -89,7 +89,14 @@ else
 	sudo smbpasswd -a $smbUser
 	wait $1
 
-	echo "script will now exit.\nrun it again to test if everything is okay now!"
+	echo -e "script will now exit.\nrun it again to test if everything is okay now!"
+	exit
+fi
+
+##check your local folder actually exists
+##assumes it's a drive mounted to a folder
+if [ "$(df | grep $smbPath)" = "/dev/null" ]; then
+	echo -e "the local file path isn't mounted!\nplease check your fstab and run the script again"
 	exit
 fi
 
@@ -121,6 +128,11 @@ while true; do
 
 			c=$((c+1)) ##increment the counter by one
 		done
+
+		if [ "$(df | grep $smbPath)" = "/dev/null" ]; then ##sanity checking to see if the local file path exists again
+			echo -e "the local file path isn't mounted!\nplease check your fstab and run the script again"
+			exit
+		fi
 
 		c=0
 		until [ $c = $[$signCount+1] ]; do ##checking if the sign names have a local folder
