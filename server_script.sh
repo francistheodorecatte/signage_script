@@ -25,9 +25,9 @@ if [ "$(ls -A /usr/sbin/rclone)" ]; then
 else
 	echo "installing rclone now"
 	##download rclone
-	curl -O http://downloads.rclone.org/rclone-current-linux-amd64.zip
-	unzip rclone-current-linux-amd64.zip
-	cd rclone-*-linux-amd64
+	curl -O http://downloads.rclone.org/rclone-current-linux-arm.zip
+	unzip rclone-current-linux-arm.zip
+	cd rclone-*-linux-arm
 
 	##copy rclone and its manpage
 	sudo cp rclone "/usr/sbin/"
@@ -41,7 +41,10 @@ else
 	rclone config &
 	wait $!
 	echo -e "if using google drive, use your own client_id!\nfollow the instructions at the bottom of this page:\nhttps://rclone.org/drive/"
-	wait 5
+	sleep 5
+	echo "cleaning up..."
+	cd ..
+	sudo rm -rf rclone-current*
 fi
 
 ##setting the remote drive variable
