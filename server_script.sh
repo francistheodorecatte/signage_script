@@ -60,13 +60,13 @@ fi
 
 ##setup SMB
 
-if [ "ps -A | grep smbd | echo $?" = 0 ]; then ##test if samba is even running
+if [ "ps -A | grep smbd" ]; then ##test if samba is even running
 	echo "samba server already running!"
-elif [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1 | echo $?" = 0 ]; then ##test if our smb server is running
+elif [ "smbclient -N -L $HOSTNAME | grep $smbName $1 | echo $?" = 0 ]; then ##test if our smb server is running
 	echo "samba is already configured but not running!"
 	sudo service start samba
 	if [ "ps -A | grep smbd" ]; then ##double checking everything is okay
-		if [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1 | echo $?" = 0 ]; then
+		if [ "smbclient -N -L $HOSTNAME | grep $smbName $1 | echo $?" = 0 ]; then
 			echo "samba server is now running"
 		else
 			echo "samba server is not configured properly and failing to start!\nplease check its configuration and run the script again."
