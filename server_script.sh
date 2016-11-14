@@ -102,12 +102,12 @@ while true; do
 	ethStatus=`cat /sys/class/net/eth0/operstate`
 	if [ $ethStatus = "down" ]; then
 		echo "network connection is down! check the eth0 interface."
-	elif [ "rclone ls $remoteDrive | grep 'Failed to create file system' $1" ]; then
+	elif [ "rclone -q ls $remoteDrive | grep 'Failed to create file system' $1" ]; then
 		echo "internet connection is down! waiting $checkInterval seconds before trying again"
 	else
 		echo "\n\nnow checking for new files"
 
-		signCount=`rclone lsd $remoteDrive | grep -o '-1 Sign' | wc -l` ##cloud storage folders should be named Sign0-Sign99, etc.
+		signCount=`rclone -q lsd $remoteDrive | grep -o '-1 Sign' | wc -l` ##cloud storage folders should be named Sign0-Sign99, etc.
 		##or at least the script will assume that for now
 		##this counts the number of signs there are
 		echo $signCount
