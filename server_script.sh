@@ -38,8 +38,8 @@ else
 	sudo mandb 
 	
 	echo "rclone now installed... opening configuration."
-	rclone config &
-	wait $!
+	rclone config
+	wait $1
 	echo -e "if using google drive, use your own client_id!\nfollow the instructions at the bottom of this page:\nhttps://rclone.org/drive/"
 	sleep 5
 	echo "cleaning up..."
@@ -66,7 +66,7 @@ elif [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1" ]; then ##test if our sm
 	echo "samba is already configured but not running!"
 	sudo service start samba
 	if [ "ps -p $(pidof smbd)" ]; then ##double checking everything is okay
-		if [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1" ];
+		if [ "smbclient -N -L $HOSTNAME | grep '$smbName' $1" ]; then
 			echo "samba server is now running"
 		else
 			echo "samba server is not configured properly and failing to start!\nplease check its configuration and run the script again."
