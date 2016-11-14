@@ -50,7 +50,6 @@ fi
 ##setting the remote drive variable
 ##make sure the first drive you see in the output of 'rclone listremotes' is the one you want to use
 remoteDrive=`rclone listremotes | awk 'NR == 1' $1`
-echo $remoteDrive
 
 if [ "rclone lsd $remoteDrive" ]; then 
 	echo "rclone properly configured!"
@@ -102,7 +101,7 @@ while true; do
 	ethStatus=`cat /sys/class/net/eth0/operstate`
 	if [ $ethStatus = "down" ]; then
 		echo "network connection is down! check the eth0 interface."
-	elif [ "rclone -q ls $remoteDrive | grep 'Failed to create file system' $1" ]; then
+	elif [ "rclone -q ls $remoteDrive | grep Failed $1" ]; then
 		echo "internet connection is down! waiting $checkInterval seconds before trying again"
 	else
 		echo "\n\nnow checking for new files"
