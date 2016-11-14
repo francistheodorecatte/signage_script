@@ -80,7 +80,7 @@ else
 	echo "samba not running or configured!"
 
 	##make sure samba is installed
-	sudo apt-get install samba samba-common-bin 
+	sudo apt-get install -y samba samba-common-bin 
 
 	##add some stuff to the smb config
 	sudo echo -e "\nworkgroup = $workgroup" >> /etc/samba/smb.conf
