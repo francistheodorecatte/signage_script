@@ -1,6 +1,6 @@
 #!/bin/bash
 ##raspi automagik digital signage script
-##version .03, written by Joseph Keller, 2016.
+##version .03b, written by Joseph Keller, 2016.
 ##run this app as root or with sudo privs!
 ##requires omxplayer and cifs-utils to work.
 
@@ -30,20 +30,31 @@ sudo chmod 600 $HOME/.smbcredentials
 smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$userHome/.smbcredentials,user 0 0"
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
 scriptPID="cat /tmp/signage_script.pid"
-remoteMD5Hash=$((0))
-localMD5Hash=$((0))
+remoteMD5Hash=/dev/null
+localMD5Hash=/dev/null
 
 
 # FUNCTIONS
 function remoteFileCopy {
-	sudo cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}.mp4" &
+	sudo cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}_temp.mp4" &
 	wait $!
-	localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
-	echo "local MD5 hash is: " $localMD5Hash
+	tempLocalMD5Hash=`md5sum -b "${localFolder}/${signName}_temp.mp4" | awk '{print $1}'`
+	
+	if [ “$tempLocalMD5Hash” == “$remoteMD5Hash” ]; then ##sanity checking to make sure the local file doesn’t get overwritten with something corrupt during transfer
+		cp -p "${localFolder}/${signName}_temp.mp4" "${localFolder}/${signName}.mp4" &
+		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
+		echo “local MD5 hash is $localMD5Hash”
+		rm ${localFolder}/${signName}_temp.mp4
+	else
+		echo -e “local/remote checksum mismatch!\ndid you just update the remote file? otherwise, transfer corrupted!”
+		rm ${localFolder}/${signName}_temp.mp4
+	fi
 }
 
 function ramFileCopy {
-	sudo cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" &
+	if [ “$localMD5Hash” != /dev/null ]; then
+		sudo cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" &
+	fi
 }
 
 function videoPlayer {
@@ -113,7 +124,7 @@ fi
 while true; do
 	remoteMD5Hash=`md5sum -b "${smbMountPoint}/${signName}.mp4" | awk '{print $1}'` ##update the remote file's MD5 hash every time the loop restarts
 	echo "remote MD5 hash is: " $remoteMD5Hash
-	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file time
+	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file hash
 		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
 	else
 		localMD5Hash=0
@@ -131,10 +142,8 @@ while true; do
 		echo "No remote file found!"
 		echo "Please check remote drive and/or configuration for errors!"
 	elif [ "$remoteMD5Hash" != "$localMD5Hash" ]; then
-		echo "Copying newer remote file."
 		remoteFileCopy
 		wait $!
-		echo "Copying file into ram disk."
 		ramFileCopy
 		wait $!
 		videoPlayer
