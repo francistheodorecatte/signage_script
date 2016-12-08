@@ -33,13 +33,14 @@ scriptPID="cat /tmp/signage_script.pid"
 remoteMD5Hash=/dev/null
 localMD5Hash=/dev/null
 tempLocalMD5Hash=/dev/null
+tempLocalFileName="${localFolder}/${signName}_temp.mp4" ##pls
 
 
 # FUNCTIONS
 function remoteFileCopy {
 	sudo cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}_temp.mp4" &
 	wait $!
-	templocalMD5Hash=`md5sum -b "${localFolder}/${signName}_temp.mp4" | awk '{print $1}'` &
+	templocalMD5Hash=`md5sum -b "$tempLocalFileName" | awk '{print $1}'` &
 	wait $!
 	echo "temporary local MD5 hash is $tempLocalMD5Hash"
 	
