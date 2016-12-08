@@ -14,6 +14,10 @@ The server does a similar thing as the client side, checking for newer video ver
 
 This Pi requires a full Rasbian setup (not the lite distro), as well as rclone, to work. However, the script will install and configure rclone with only a little user interaction. :)
 
+As of now, December 8th, 2016, the server-side script is far from finished. It 'works,' but I wouldn't recommend using it unless you know bash scripting really well. We're currently just using a manually updated smb server instead. We probably won't use and therefore bugfix this script until we actually put it into use.
+
+As a result, I don't recommend using it! 
+
 ## Disclaimers
 
 If you copy this, god help you.
