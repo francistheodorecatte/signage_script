@@ -40,6 +40,7 @@ function remoteFileCopy {
 	wait $!
 	tempLocalMD5Hash=`md5sum -b "${localFolder}/${signName}_temp.mp4" | awk '{print $1}'` &
 	wait $!
+	echo "temporary local MD5 hash is $tempLocalMD5Hash"
 	
 	if [ “$tempLocalMD5Hash” == “$remoteMD5Hash” ]; then ##sanity checking to make sure the local file doesn’t get overwritten with something corrupt during transfer
 		cp -p "${localFolder}/${signName}_temp.mp4" "${localFolder}/${signName}.mp4" &
