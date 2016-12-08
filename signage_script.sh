@@ -44,10 +44,10 @@ function remoteFileCopy {
 		cp -p "${localFolder}/${signName}_temp.mp4" "${localFolder}/${signName}.mp4" &
 		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
 		echo “local MD5 hash is $localMD5Hash”
-		rm ${localFolder}/${signName}_temp.mp4
+		sudo rm ${localFolder}/${signName}_temp.mp4
 	else
 		echo -e “local/remote checksum mismatch!\ndid you just update the remote file? otherwise, transfer corrupted!”
-		rm ${localFolder}/${signName}_temp.mp4
+		sudo rm ${localFolder}/${signName}_temp.mp4
 	fi
 }
 
