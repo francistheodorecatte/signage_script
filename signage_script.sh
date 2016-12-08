@@ -30,9 +30,9 @@ sudo chmod 600 $HOME/.smbcredentials
 smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$userHome/.smbcredentials,user 0 0"
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
 scriptPID="cat /tmp/signage_script.pid"
-remoteMD5Hash="cat /dev/null | awk '{print $1}'"
-localMD5Hash="cat /dev/null | awk '{print $1}'"
-tempLocalMD5Hash="cat /dev/null | awk '{print $1}'"
+remoteMD5Hash=`cat /dev/null | awk '{print $1}'`
+localMD5Hash=`cat /dev/null | awk '{print $1}'`
+tempLocalMD5Hash=`cat /dev/null | awk '{print $1}'`
 tempLocal="${localFolder}/${signName}_temp.mp4"
 echo "temporary local file name is $tempLocal"
 
@@ -44,7 +44,7 @@ function remoteFileCopy {
 	wait $!
 	echo "temporary local MD5 hash is $tempLocalMD5Hash"
 	
-	if [ “$tempLocalMD5Hash” == “$remoteMD5Hash” ]; then ##sanity checking to make sure the local file doesn’t get overwritten with something corrupt during transfer
+	if [ `$tempLocalMD5Hash` == `$remoteMD5Hash` ]; then ##sanity checking to make sure the local file doesn’t get overwritten with something corrupt during transfer
 		sudo cp -p "${localFolder}/${signName}_temp.mp4" "${localFolder}/${signName}.mp4" &
 		wait $!
 		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'` &
@@ -58,7 +58,7 @@ function remoteFileCopy {
 }
 
 function ramFileCopy {
-	if [ “$localMD5Hash” != "cat /dev/null | awk '{print $1}'" ]; then
+	if [ `$localMD5Hash` != `cat /dev/null | awk '{print $1}'` ]; then
 		sudo cp -p "${localFolder}/${signName}.mp4" "${ramDiskMountPoint}/${signName}.mp4" &
 	fi
 }
