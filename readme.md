@@ -14,7 +14,7 @@ The server does a similar thing as the client side, checking for newer video ver
 
 This Pi requires a full Rasbian setup (not the lite distro), as well as rclone, to work. However, the script will install and configure rclone with only a little user interaction. :)
 
-As of now, December 8th, 2016, the server-side script is far from finished. It 'works,' but I wouldn't recommend using it unless you know bash scripting really well. We're currently just using a manually updated smb server instead. We probably won't use and therefore bugfix this script until we actually put it into use.
+As of now, December 8th, 2016, the server-side script is far from finished. It 'works,' but I wouldn't recommend using it unless you know bash scripting really well. We're currently just using a manually updated smb server instead. We probably won't use and therefore bugfix this script until a customer really needs that functionality.
 
 As a result, I don't recommend using it! 
 
@@ -25,5 +25,7 @@ If you copy this, god help you.
 I wrote this to meet our specific needs for a specific project. As of this writing, using it outside of that specific use-case is at your own risk. Do not expect any support from me in using it.
 
 If you have more than 5-10 Pi's running this script on a wireless network, increase the checkInterval value in signage_script.cfg to a large value, like 3600 (1 hour.) Otherwise you'll wreck your network!
+
+Additionally, you should probably add "@Daily root /sbin/shutdown -r now" to your crontab to keep things stable.
 
 Happy hacking!
