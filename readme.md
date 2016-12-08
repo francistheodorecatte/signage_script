@@ -20,4 +20,6 @@ If you copy this, god help you.
 
 I wrote this to meet our specific needs for a specific project. As of this writing, using it outside of that specific use-case is at your own risk. Do not expect any support from me in using it.
 
+If you have more than 5-10 Pi's running this script on a wireless network, increase the checkInterval value in signage_script.cfg to a large value, like 3600 (1 hour.) Otherwise you'll wreck your network!
+
 Happy hacking!
