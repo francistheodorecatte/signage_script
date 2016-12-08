@@ -40,7 +40,7 @@ echo "temporary local file name is $tempLocal"
 function remoteFileCopy {
 	sudo cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}_temp.mp4" &
 	wait $!
-	tempLocalMD5Hash=`md5sum -b "$tempLocal" | awk '{print $1}'` &
+	tempLcalMD5Hash=`md5sum -b "${tempLocal}" | awk '{print $1}'`
 	wait $!
 	echo "temporary local MD5 hash is $tempLocalMD5Hash"
 	
@@ -52,7 +52,7 @@ function remoteFileCopy {
 		echo “local MD5 hash is $localMD5Hash”
 		sudo rm ${localFolder}/${signName}_temp.mp4
 	else
-		echo -e “local/remote checksum mismatch!\ndid you just update the remote file? otherwise, transfer corrupted!”
+		echo -e "local/remote checksum mismatch!\ndid you just update the remote file? otherwise, transfer corrupted!"
 		sudo rm ${localFolder}/${signName}_temp.mp4
 	fi
 }
