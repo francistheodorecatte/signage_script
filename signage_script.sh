@@ -30,17 +30,15 @@ sudo chmod 600 $HOME/.smbcredentials
 smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$userHome/.smbcredentials,user 0 0"
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
 scriptPID="cat /tmp/signage_script.pid"
-remoteMD5Hash=/dev/null
-localMD5Hash=/dev/null
-tempLocalMD5Hash=/dev/null
-tempLocalFileName="${localFolder}/${signName}_temp.mp4" ##pls
-
+remoteMD5Hash="/dev/null"
+localMD5Hash="/dev/null"
+tempLocalMD5Hash="/dev/null"
 
 # FUNCTIONS
 function remoteFileCopy {
 	sudo cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}_temp.mp4" &
 	wait $!
-	templocalMD5Hash=`md5sum -b "$tempLocalFileName" | awk '{print $1}'` &
+	tempLocalMD5Hash=`md5sum -b "${localFolder}/${signName}_temp.mp4" | awk '{print $1}'` &
 	wait $!
 	echo "temporary local MD5 hash is $tempLocalMD5Hash"
 	
