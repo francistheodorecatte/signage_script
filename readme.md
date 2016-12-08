@@ -26,6 +26,6 @@ I wrote this to meet our specific needs for a specific project. As of this writi
 
 If you have more than 5-10 Pi's running this script on a wireless network, increase the checkInterval value in signage_script.cfg to a large value, like 3600 (1 hour.) Otherwise you'll wreck your network!
 
-Additionally, you should probably add "@Daily root /sbin/shutdown -r now" to your crontab to keep things stable.
+Additionally, you should probably add "@Daily root /sbin/shutdown -r now" to your crontab to keep things stable. Warning that this might cause all of your Pi's to try updating at the same time! This could cause massive congestion every time the Pi's update. :)
 
 Happy hacking!
