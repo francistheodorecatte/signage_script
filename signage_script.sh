@@ -38,11 +38,14 @@ localMD5Hash=/dev/null
 function remoteFileCopy {
 	sudo cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}_temp.mp4" &
 	wait $!
-	tempLocalMD5Hash=`md5sum -b "${localFolder}/${signName}_temp.mp4" | awk '{print $1}'`
+	tempLocalMD5Hash=`md5sum -b "${localFolder}/${signName}_temp.mp4" | awk '{print $1}'` &
+	wait $!
 	
 	if [ “$tempLocalMD5Hash” == “$remoteMD5Hash” ]; then ##sanity checking to make sure the local file doesn’t get overwritten with something corrupt during transfer
 		cp -p "${localFolder}/${signName}_temp.mp4" "${localFolder}/${signName}.mp4" &
-		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
+		wait $!
+		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'` &
+		wait $!
 		echo “local MD5 hash is $localMD5Hash”
 		sudo rm ${localFolder}/${signName}_temp.mp4
 	else
