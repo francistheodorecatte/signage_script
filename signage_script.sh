@@ -43,8 +43,12 @@ function remoteFileCopy {
 	tempLocalMD5Hash=`md5sum -b "${tempLocal}" | awk '{print $1}'`
 	wait $!
 	echo "temporary local MD5 hash is $tempLocalMD5Hash"
-	
-	if [ "$tempLocalMD5Hash" == "$remoteMD5Hash" ]; then ##sanity checking to make sure the local file doesn’t get overwritten with something corrupt during transfer
+
+	remoteMD5Length=${#remoteMD5Hash} ##should be 32, not zero
+
+	if [ "$remoteMD5Length" == "0" ]; then ##sanity checking if server is offline
+		echo -e "MD5 length is incorrect!\nis the file server offline?"
+	elif [ "$tempLocalMD5Hash" == "$remoteMD5Hash" ]; then ##sanity checking to make sure the local file doesn’t get overwritten with something corrupt during transfer
 		sudo cp -p "${localFolder}/${signName}_temp.mp4" "${localFolder}/${signName}.mp4" &
 		wait $!
 		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'` &
