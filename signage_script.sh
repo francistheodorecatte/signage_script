@@ -132,7 +132,8 @@ if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
 fi
 
 while true; do
-	remoteMD5Hash=`md5sum -b "${smbMountPoint}/${signName}.mp4" | awk '{print $1}'` ##update the remote file's MD5 hash every time the loop restarts
+	remoteMD5Hash=`md5sum -b "${smbMountPoint}/${signName}.mp4" | awk '{print $1}'` & ##update the remote file's MD5 hash every time the loop restarts
+	wait $!
 	echo "remote MD5 hash is: " $remoteMD5Hash
 	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file hash
 		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'` &
