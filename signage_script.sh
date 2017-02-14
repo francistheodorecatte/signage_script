@@ -40,7 +40,7 @@ echo "temporary local file name is $tempLocal"
 function remoteFileCopy {
 	sudo cp -p "${smbMountPoint}/${signName}.mp4" "${localFolder}/${signName}_temp.mp4" &
 	wait $!
-	tempLocalMD5Hash=`md5sum -b "${tempLocal}" | awk '{print $1}'`
+	tempLocalMD5Hash=`md5sum -b "${tempLocal}" | awk '{print $1}'` &
 	wait $!
 	echo "temporary local MD5 hash is $tempLocalMD5Hash"
 
@@ -135,7 +135,8 @@ while true; do
 	remoteMD5Hash=`md5sum -b "${smbMountPoint}/${signName}.mp4" | awk '{print $1}'` ##update the remote file's MD5 hash every time the loop restarts
 	echo "remote MD5 hash is: " $remoteMD5Hash
 	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file hash
-		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'`
+		localMD5Hash=`md5sum -b "${localFolder}/${signName}.mp4" | awk '{print $1}'` &
+		wait $!
 	else
 		localMD5Hash=0
 	fi
