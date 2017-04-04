@@ -1,6 +1,6 @@
 #!/bin/bash
 ##raspi automagik digital signage script
-##version .03b, written by Joseph Keller, 2016.
+##version .03c, written by Joseph Keller, 2017.
 ##run this app as root or with sudo privs!
 ##requires omxplayer and cifs-utils to work.
 
@@ -13,8 +13,8 @@ configfile_secure="/tmp/signage_script.cfg"
 if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"; then
  	echo "Config file is unclean; cleaning..." >&2
 	##clean config's contents and move to clean version
- 	egrep '^#|^[^ ]*=[^;&]*'  "$configfile" > "$configfile_secured"
- 	configfile="$configfile_secured"
+ 	egrep '^#|^[^ ]*=[^;&]*'  "$configfile" > "$configfile_secure"
+ 	configfile="$configfile_secure"
 fi
 
 source $configfile
@@ -69,7 +69,7 @@ function ramFileCopy {
 
 function videoPlayer {
 	sudo killall omxplayer
-	omxplayer -b -o hdmi --loop --no-osd --no-keys --orientation $screenOrientation --aspect-mode $aspectMode "${ramDiskMountPoint}/${signName}.mp4" & 
+	omxplayer -b -o $audioOut --loop --no-osd --no-keys --orientation $screenOrientation --aspect-mode $aspectMode "${ramDiskMountPoint}/${signName}.mp4" & 
 	##start omxplayer with a blanked background, output to hdmi, loop, turn off the on-screen display, and disable key controls
 	sudo killall omxplayer.bin 
 }
