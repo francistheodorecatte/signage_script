@@ -30,11 +30,15 @@ sudo chmod 600 $HOME/.smbcredentials
 smbDisk="//${smbAddress}/${smbFilepath} $smbMountPoint cifs credenitals=$userHome/.smbcredentials,user 0 0"
 ramDisk="tmpfs $ramDiskMountPoint tmpfs nodev,nosuid,size=$ramDiskSize 0 0"
 scriptPID="cat /tmp/signage_script.pid"
+scriptDir="$(cd "$(dirname "$0")" && pwd)"
 remoteMD5Hash=`cat /dev/null | awk '{print $1}'`
 localMD5Hash=`cat /dev/null | awk '{print $1}'`
 tempLocalMD5Hash=`cat /dev/null | awk '{print $1}'`
 tempLocal="${localFolder}/${signName}_temp.mp4"
-echo "temporary local file name is $tempLocal"
+rebootScript="${scriptDir}/random_three_hour_reboot.sh"
+crontabLine="* 1 * * * ${rebootScript}"
+
+#echo "temporary local file name is $tempLocal"
 
 # FUNCTIONS
 function remoteFileCopy {
@@ -74,13 +78,20 @@ function videoPlayer {
 
 # MAIN PROGRAM
 
-if ps --pid $scriptPID > /dev/null; then ##check if script is already running
+if [ ps --pid $scriptPID > /dev/null ]; then ##check if script is already running
 	sudo kill $scriptPID
-	if ps -p $scriptPID > /dev/null; then
+	if [ ps -p $scriptPID > /dev/null ]; then
 		echo "No previous script running!"
 	else
 		echo "Previous script killed."
 	fi
+fi
+
+if [ crontab -l | grep -q '${rebootScript}' ]; then ##add a random reboot; if you don't want this, comment it out.
+	echo "random reboot added to crontab already!"
+else
+	(crontab -u $USER -l; echo "$crontabLine" ) | crontab -u $USER -
+	echo "random reboot added to crontab!"
 fi
 
 if grep -q '$ramDisk' /etc/fstab; then
