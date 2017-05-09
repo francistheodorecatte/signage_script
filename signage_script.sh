@@ -35,8 +35,7 @@ remoteMD5Hash=`cat /dev/null | awk '{print $1}'`
 localMD5Hash=`cat /dev/null | awk '{print $1}'`
 tempLocalMD5Hash=`cat /dev/null | awk '{print $1}'`
 tempLocal="${localFolder}/${signName}_temp.mp4"
-rebootScript="${scriptDir}/random_three_hour_reboot.sh"
-crontabLine="* 1 * * * ${rebootScript}"
+rclocal="sh -c 'setterm -blank 0 -powersave off -powerdown 0 < /dev/console > /dev/console 2>&1'"
 
 #echo "temporary local file name is $tempLocal"
 
@@ -87,9 +86,23 @@ if [ ps --pid $scriptPID > /dev/null ]; then ##check if script is already runnin
 	fi
 fi
 
-#auto update check; add auto_update=true to config if you want to enable this
-
 #check if rc.local is configured to fix screen blanking
+if grep -q '$rclocal' '/etc/rc.local'; then
+	echo "anti-screenblank measure already added to rc.local"
+else
+	sudo echo $rclocal > '/etc/rc.local'
+	sudo chmod u+x '/etc/rc.local'
+	echo -e "rc.local updated with anti-screenblank measures\nrebooting in five seconds"
+	sleep 5s
+	sudo reboot
+fi
+
+#if that doesn't fix the screen blanking, consider adding these lines to /boot/config.txt
+#dispmanx_offline=1
+#config_hdmi_boost=4
+#hdmi_blanking=0
+#hdmi_force_hotplug=0
+#if those don't help you, look elsewhere for help...
 
 if grep -q '$ramDisk' /etc/fstab; then
 	sudo mkdir $ramDiskMountPoint
@@ -138,6 +151,18 @@ if [ "$(ls -A ${ramDiskMountPoint}/${signName}.mp4)" ]; then
 fi
 
 while true; do
+	#auto update check; add auto_update=true to config if you want to enable this
+	if $auto_update; then
+		git remote update
+		if [ "$(git status -uno | grep 'up-to-date')" = false ]; then
+			# git checkout master #just in case
+			echo "fetching new script..."
+			git pull
+			echo "done. restarting script."
+			bash ./signage_script.sh
+		fi
+	fi
+
 	remoteMD5Hash=`md5sum -b "${smbMountPoint}/${signName}.mp4" | awk '{print $1}'` ##update the remote file's MD5 hash every time the loop restarts
 	echo "remote MD5 hash is: " $remoteMD5Hash
 	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file hash
