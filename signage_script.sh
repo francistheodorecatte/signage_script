@@ -87,12 +87,9 @@ if [ ps --pid $scriptPID > /dev/null ]; then ##check if script is already runnin
 	fi
 fi
 
-if [ crontab -l | grep -q '${rebootScript}' ]; then ##add a random reboot; if you don't want this, comment it out.
-	echo "random reboot added to crontab already!"
-else
-	(crontab -u $USER -l; echo "$crontabLine" ) | crontab -u $USER -
-	echo "random reboot added to crontab!"
-fi
+#auto update check; add auto_update=true to config if you want to enable this
+
+#check if rc.local is configured to fix screen blanking
 
 if grep -q '$ramDisk' /etc/fstab; then
 	sudo mkdir $ramDiskMountPoint
