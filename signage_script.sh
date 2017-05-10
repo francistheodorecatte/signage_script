@@ -162,7 +162,7 @@ while true; do
 			bash ./signage_script.sh
 		fi
 	fi
-
+	sudo mount -a
 	remoteMD5Hash=`md5sum -b "${smbMountPoint}/${signName}.mp4" | awk '{print $1}'` ##update the remote file's MD5 hash every time the loop restarts
 	echo "remote MD5 hash is: " $remoteMD5Hash
 	if [ "$(ls -A ${localFolder}/${signName}.mp4)" ]; then ##do some sanity checking on the local file hash
