@@ -87,15 +87,15 @@ if [ ps --pid $scriptPID > /dev/null ]; then ##check if script is already runnin
 fi
 
 #check if rc.local is configured to fix screen blanking
-if [ "$(sudo cat '/etc/rc.local/' |  grep -q '$rclocal')" ]; then
-	echo "anti-screenblank measure already added to rc.local"
-else
-	sudo sh -c "echo $rclocal > '/etc/rc.local'"
-	sudo chmod u+x '/etc/rc.local'
-	echo -e "rc.local updated with anti-screenblank measures\nrebooting in five seconds"
-	sleep 5s
-	sudo reboot
-fi
+#if [ "$(sudo cat '/etc/rc.local/' |  grep -q '$rclocal')" ]; then
+#	echo "anti-screenblank measure already added to rc.local"
+#else
+#	sudo sh -c "echo $rclocal > '/etc/rc.local'"
+#	sudo chmod u+x '/etc/rc.local'
+#	echo -e "rc.local updated with anti-screenblank measures\nrebooting in five seconds"
+#	sleep 5s
+#	sudo reboot
+#fi
 
 #if that doesn't fix the screen blanking, consider adding these lines to /boot/config.txt
 #dispmanx_offline=1
