@@ -87,7 +87,7 @@ if [ ps --pid $scriptPID > /dev/null ]; then ##check if script is already runnin
 fi
 
 #check if rc.local is configured to fix screen blanking
-if sudo grep -q '$rclocal' '/etc/rc.local'; then
+if [ "$(sudo cat '/etc/rc.local/' |  grep -q '$rclocal')" ]; then
 	echo "anti-screenblank measure already added to rc.local"
 else
 	sudo sh -c "echo $rclocal > '/etc/rc.local'"
